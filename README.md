@@ -14,7 +14,8 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
   - [Debian 11 (bullseye)](debian-bullseye-install-audio.sh)
   - [Debian 12 (bookworm)](debian-bookworm-install-audio.sh)
 - **Ubuntu**
-  - [20.04 (focal)](ubuntu-focual-install-audio.sh)
+  - [20.04 (focal)](ubuntu-focal-install-audio.sh)
+  - [21.10 (impish)](ubuntu-impish-install-audio.sh)
 - **KDE Neon**
   - [20.04 (based on focal)](neon-focal-install-audio.sh)
 - **Mint**
