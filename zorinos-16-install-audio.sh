@@ -1,8 +1,8 @@
 # ---------------------------
-# This is a bash script for configuring Ubuntu 20.04 (focal) for pro audio.
+# This is a bash script for configuring Zorin OS 16 for pro audio.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/main/ubuntu-focal-install-audio.sh | bash
+# sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/main/zorinos-16-install-audio.sh | bash
 
 notify () {
   echo "----------------------------------"
