@@ -1,9 +1,7 @@
 # ---------------------------
 # This is a bash script for configuring Debian 11 (bullseye) for pro audio.
-# I have used Bitwig below (it's my main production tool), however this script
-# will allow you to use any DAW, for example Reaper, Ardour, MixBus and more.
 # ---------------------------
-# NOTE: This script is executed by running the following command on your system:
+# NOTE: Execute this script by running the following command on your system:
 # sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/debian-bullseye-install-audio.sh | bash
 
 notify () {
