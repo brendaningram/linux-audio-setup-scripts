@@ -24,6 +24,8 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
   - coming soon
 - **Arch**
   - coming soon
+- **Manjaro**
+  - coming soon
 
 ## You can find me at:
 - [https://brendaningram.com](https://brendaningram.com)
