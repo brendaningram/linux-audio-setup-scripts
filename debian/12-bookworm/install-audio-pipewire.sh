@@ -1,8 +1,12 @@
+#!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Debian 12 (bookworm) for pro audio.
+# This is a bash script for configuring Debian 12 (bookworm) for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/debian-bookworm-install-audio.sh | bash
+# sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/debian-bookworm-install-audio-pipewire.sh | bash
+
+# Exit if any command fails
+set -e
 
 notify () {
   echo "----------------------------------"
@@ -14,56 +18,75 @@ notify () {
 # Update our system
 # ---------------------------
 notify "Update the system"
-sudo apt update && sudo apt dist-upgrade -y
+sudo apt update && sudo apt full-upgrade -y
 
 
 # ---------------------------
-# Install kxstudio and cadence
-# Cadence is a tool for managing audio connections to our hardware
-# NOTE: Select "YES" when asked to enable realtime privileges
+# Liquorix kernel
+# https://liquorix.net/
 # ---------------------------
-notify "Install kxstudio and cadence"
-sudo apt-get install apt-transport-https gpgv -y
-wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
-sudo dpkg -i kxstudio-repos_10.0.3_all.deb
-rm kxstudio-repos_10.0.3_all.deb
-sudo apt update
-sudo apt install cadence -y
+notify "Install the Liquorix kernel"
+wget -O - https://liquorix.net/add-liquorix-repo.sh | sudo bash
+sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64 -y
 
 
 # ---------------------------
-# cpufrequtils
+# Pipewire
+# https://wiki.debian.org/PipeWire
+# ---------------------------
+notify "Install pipewire"
+sudo apt install pipewire pipewire-audio-client-libraries libspa-0.2-jack pipewire-pulse -y
+
+sudo apt install qjackctl --no-install-recommends -y
+
+# All apps that use JACK will now use the Pipewire JACK
+sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-*.conf /etc/ld.so.conf.d/
+sudo ldconfig
+
+
+# ---------------------------
+# cpupower
 # This tool allows our CPU to run at maximum performance
 # On a laptop this will drain the battery faster,
 # but will result in much better audio performance.
 # ---------------------------
-notify "CPU Frequency"
-sudo apt install cpufrequtils -y
-echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
+#notify "Use performance CPU Governor"
+#sudo apt install linux-cpupower -y
+#sudo systemctl enable cpupower.service
+#sudo sed -i 's/#governor='\''ondemand'\''/governor='\''performance'\''/g' /etc/default/cpupower
 
 
 # ---------------------------
 # grub
 # ---------------------------
-notify "GRUB options"
+notify "Modify GRUB options"
 sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet threadirqs mitigations=off"/g' /etc/default/grub
 sudo update-grub
 
 
 # ---------------------------
+# limits
+# ---------------------------
+notify "Modify limits.d/audio.conf"
+# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
+echo '@audio - rtprio 90
+@audio - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
+
+
+# ---------------------------
 # sysctl.conf
 # ---------------------------
-notify "sysctl.conf"
+notify "Modify /etc/sysctl.conf"
 # See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 echo 'vm.swappiness=10
-fs.inotify.max_user_watches=524288' | sudo tee -a /etc/sysctl.conf
+fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
 
 
 # ---------------------------
 # Add the user to the audio group
 # ---------------------------
-notify "Add user to the audio group"
-sudo adduser $USER audio
+notify "Add ourselves to the audio group"
+sudo usermod -a -G audio $USER
 
 
 # ---------------------------
@@ -88,6 +111,7 @@ rm bitwig.deb
 # NOTE: As of the date of this commit, the most recent version of Reaper is:
 # 6.36
 # ---------------------------
+notify "Install Reaper"
 wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper636_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
@@ -102,13 +126,20 @@ rm reaper.tar.xz
 # ---------------------------
 
 # Install Wine (yabridge needs this)
-notify "Install Wine"
+notify "Install Wine Staging"
 wget -nc https://dl.winehq.org/wine-builds/winehq.key
 sudo apt-key add winehq.key
 rm winehq.key
 echo 'deb https://dl.winehq.org/wine-builds/debian/ bookworm main' | sudo tee -a /etc/apt/sources.list
 sudo apt update
 sudo apt install --install-recommends winehq-staging -y
+
+# Winetricks
+sudo apt install winetricks zenity -y
+
+# NOTE: On first run wine will set up your wineprefix.
+# NOTE: You may see a dialog to install MONO - click "Install".
+winetricks corefonts
 
 # Download and install yabridge
 # NOTE: When you run this script, there may be a newer version.
