@@ -4,7 +4,7 @@
 # ---------------------------
 # NOTE: See the README.md for instructions on installing Arch from scratch.
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/arch/install-desktop.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/main/arch/install-desktop.sh | sudo bash
 
 # Exit if any command fails
 set -e
@@ -15,10 +15,19 @@ notify () {
   echo "----------------------------------"
 }
 
+# Ensure this script is run as sudo
+whoami | grep "root" > /dev/null
+if [ $? -eq 1 ]
+then
+	echo "Usage: sudo $0";
+	exit;
+fi
+
+
 # ------------------------------------------------------------------------------------
 # Add ourselves as sudo
 # ------------------------------------------------------------------------------------
-su -c "echo '$USER ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/$USER"
+#su -c "echo '$USER ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/$USER"
 
 # ------------------------------------------------------------------------------------
 # Core install
