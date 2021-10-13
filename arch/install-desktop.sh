@@ -1,19 +1,19 @@
+#!/bin/bash
 # ---------------------------
 # This is a bash script for configuring Arch as a usable Windows or Mac replacement.
 # ---------------------------
-# NOTE: See my guide at TODO for instructions on installing Arch from scratch.
+# NOTE: See the README.md for instructions on installing Arch from scratch.
 # NOTE: Execute this script by running the following command on your system:
-# sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/arch-install.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/arch/install-desktop.sh | bash
+
+# Exit if any command fails
+set -e
 
 notify () {
   echo "----------------------------------"
   echo $1
   echo "----------------------------------"
 }
-
-
-# Set the full name of the user
-chfn --full-name "$FULL_NAME" $USER
 
 # ------------------------------------------------------------------------------------
 # Add ourselves as sudo
@@ -38,12 +38,6 @@ sudo pacman -S firefox chromium --noconfirm
 # Office and editing
 sudo pacman -S libreoffice-fresh code --noconfirm
 
-# Audio
-# pulseaudio-jack: To bridge pulse to jack using Cadence
-# alsa-utils: For alsamixer (to increase base level of sound card)
-# harvid: Ardour video
-#sudo pacman -S cadence pulseaudio-jack alsa-utils ardour --noconfirm
-
 # Video
 # opentimelineio: required for Kdenlive
 sudo pacman -S digikam kdenlive opentimelineio vlc obs-studio handbrake --noconfirm
@@ -51,17 +45,15 @@ sudo pacman -S digikam kdenlive opentimelineio vlc obs-studio handbrake --noconf
 # Image and Graphics
 sudo pacman -S digikam krita blender inkscape --noconfirm
 
-# Games
-sudo pacman -S 0ad --noconfirm
-
 # Copying music CD's
 sudo pacman -S asunder vorbis-tools --noconfirm
 
-# Evaluating
-#sudo pacman -S gnucash xournalpp
-
 # Resolve Gnome Software "no plugin could handle get-updates"
 sudo pacman -S gnome-software-packagekit-plugin --noconfirm
+
+# OBS needs this set in order to be able to access wayland screens
+echo "export QT_QPA_PLATFORM=wayland" | sudo tee -a /etc/profile
+
 
 # ------------------------------------------------------------------------------------
 # yay (AUR)
@@ -85,14 +77,27 @@ yay -S timeshift --noconfirm
 yay -S makemkv --noconfirm
 
 # Dropbox
-yay -S nautilus-dropbox --noconfirm
+notify "Dropbox"
+read -p "Install Dropbox? (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  yay -S nautilus-dropbox --noconfirm
+fi
 
 # pCloud
-yay -S pcloud-drive --noconfirm
+notify "pCloud"
+read -p "Install pCloud (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  yay -S pcloud-drive --noconfirm
+fi
 
 
 # ------------------------------------------------------------------------------------
 # QT theme
+# Ensure that KDE/QT apps display nicely in Gnome
 # ------------------------------------------------------------------------------------
 
 sudo pacman -S qt6-base --noconfirm
@@ -132,7 +137,6 @@ gsettings set org.gtk.Settings.FileChooser sort-directories-first true
 # Minimize button
 gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
 
-
 # 12 hour time display
 gsettings set org.gnome.desktop.interface clock-format 12h
 
@@ -165,43 +169,10 @@ gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profi
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ scrollbar-policy 'never'
 
 
-# OBS needs this set in order to be able to access wayland screens
-echo "export QT_QPA_PLATFORM=wayland" | sudo tee -a /etc/profile
-
 # ------------------------------------------------------------------------------------
-# My personal config
+# Finish
 # ------------------------------------------------------------------------------------
 
-echo "[Unit]
-  Description=NAS: mount
-  Requires=network-online.target
-  After=network-online.service
+notify "Your Arch desktop setup is complete!"
 
-[Mount]
-  What=192.168.20.15:/volume1/NAS
-  Where=/mnt/NAS
-  Options=
-  Type=nfs
-
-[Install]
-  WantedBy=multi-user.target" | sudo tee /etc/systemd/system/mnt-NAS.mount
-  
-  
-echo "[Unit]
-  Description=NAS: Automount
-  Requires=network-online.target
-  After=network-online.service
-
-[Automount]
-  Where=/mnt/NAS
-  TimeoutIdleSec=86400
-
-[Install]
-  WantedBy=multi-user.target" | sudo tee /etc/systemd/system/mnt-NAS.automount
-
-sudo systemctl enable mnt-NAS.automount
-sudo systemctl start mnt-NAS.automount
-
-
-notify "Done!"
-
+notify "Now install audio by running either install-audio-jack or install-audio-pipewire from this Github repository."

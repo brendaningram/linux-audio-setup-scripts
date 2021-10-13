@@ -1,4 +1,4 @@
-# Arch Linux Installation Guide
+# Arch Linux Installation Guide (ext4)
 
 This guide is a **step by step and end to end guide** that will set up an Arch Linux operating system with:
 
@@ -56,7 +56,10 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 arch-chroot /mnt
 
-pacman -S grub efibootmgr linux-lts
+# Please add the appropriate ucode below:
+# - AMD CPU: amd-ucode
+# - Intel CPU: intel-ucode
+pacman -S grub efibootmgr linux linux-firmware
 
 mkdir -p /boot/EFI
 mount /dev/nvme0n1p1 /boot/EFI
@@ -65,13 +68,14 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 ln -sf /usr/share/zoneinfo/Australia/NSW /etc/localtime
 # Uncomment line 177 in /etc/locale.gen
+# If you are NOT wanting en_US.UTF-8, please manually uncomment the appropriate line
 sed -i '177s/.//' /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 echo "arch" > /etc/hostname
-echo "127.0.0.1 localhost ::1 
-localhost 127.0.1.1 
-arch.localdomain arch" > /etc/hosts
+echo "127.0.0.1 localhost 
+::1 localhost
+127.0.1.1 arch.localdomain arch" > /etc/hosts
 
 # Use reflector to get the best mirrors for your location.
 pacman -S reflector rsync
@@ -87,8 +91,11 @@ systemctl enable NetworkManager
 passwd
 
 # Create a user for logging in to the desktop
-useradd -m -g users -G wheel brendan
-passwd brendan
+# Substitute <USER> for your username, e.g. billiesmith
+useradd -m -g users -G wheel <USER>
+# Substitute <FULLNAME> for your full name, e.g. Billie Smith
+chfn --full-name "<FULLNAME>" <USER>
+passwd <USER>
 
 # Reboot into the new OS!
 exit

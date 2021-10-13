@@ -1,8 +1,14 @@
+#!/bin/bash
 # ---------------------------
 # This is a bash script for configuring Arch for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/arch-install-audio-pipewire.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/arch/install-audio-pipewire.sh | bash
+
+# Exit if any command fails
+set -e
+
+# TODO: Copy jack.conf to ~/.config/pipewire/jack.conf and make appropriate changes
 
 notify () {
   echo "----------------------------------"
@@ -17,39 +23,19 @@ notify "Update our system"
 sudo pacman -Syu
 
 # Audio
-# pulseaudio-jack: To bridge pulse to jack using Cadence
-# alsa-utils: For alsamixer (to increase base level of sound card)
 notify "Install audio packages"
-#sudo pacman -S cadence pulseaudio-jack alsa-utils ardour --noconfirm
-
-# Pipewire: TODO add documentation
-#sudo pacman -S pipewire pipewire-alsa pipewire-jack pipewire-pulse 
-
-
-
-# ---------------------------
-# cpupower
-# This tool allows our CPU to run at maximum performance
-# On a laptop this will drain the battery faster,
-# but will result in much better audio performance.
-# ---------------------------
-notify "Use performance CPU Governor"
-sudo pacman -S cpupower --noconfirm
-sudo systemctl enable cpupower.service
-sudo sed -i 's/#governor='\''ondemand'\''/governor='\''performance'\''/g' /etc/default/cpupower
+# alsa-utils: For alsamixer (to increase base level of sound card)
+sudo pacman -S pipewire pipewire-alsa pipewire-jack pipewire-pulse alsa-utils helvum ardour --noconfirm
 
 
 # ---------------------------
 # grub
+# threadirqs = TODO
+# cpufreq.default_governor=performance = TODO
 # ---------------------------
 notify "Modify GRUB options"
-#TODO:
-#sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet threadirqs mitigations=off"/g' /etc/default/grub
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet threadirqs cpufreq.default_governor=performance"/g' /etc/default/grub
 sudo update-grub
-
-#sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"(.+)\"/GRUB_CMDLINE_LINUX_DEFAULT=\"loglevel=3 quiet a\"/g" ~/grub
-#sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet a"/g' ~/grub
-
 
 
 # ---------------------------
@@ -57,8 +43,8 @@ sudo update-grub
 # ---------------------------
 notify "Modify limits.d/audio.conf"
 # See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
-echo '@audio - rtprio 90       # maximum realtime priority
-@audio - memlock unlimited  # maximum locked-in-memory address space (KB)' | sudo tee -a /etc/security/limits.d/audio.conf
+echo '@audio - rtprio 90
+@audio - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
 
 
 # ---------------------------
@@ -87,7 +73,7 @@ yay -S bitwig-studio --noconfirm
 # Reaper
 # ------------------------------------------------------------------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper636_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper637_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -111,6 +97,9 @@ sudo pacman -S wine-staging winetricks --noconfirm
 # Note: as of 10th October 2021 the correct number is 82 (6.14)
 yay -S downgrade --noconfirm
 sudo env DOWNGRADE_FROM_ALA=1 downgrade wine-staging
+
+# Base wine packages required for proper plugin functionality
+winetricks corefonts
 
 # ------------------------------------------------------------------------------------
 # yabridge
