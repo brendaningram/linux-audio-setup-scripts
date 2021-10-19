@@ -37,3 +37,7 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
 - [Facebook]()
 - [Instagram](https://www.instagram.com/brendaningrammusic)
 - [Discord]()
+
+## Notes:
+
+SSH clone: `git clone git@github.com:brendan-ingram-music/install-scripts.git`
