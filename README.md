@@ -37,3 +37,12 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
 - [Facebook]()
 - [Instagram](https://www.instagram.com/brendaningrammusic)
 - [Discord]()
+
+## Notes:
+
+#### SSH clone this repository
+`git clone git@github.com:brendan-ingram-music/install-scripts.git`
+
+#### To add yourself as a sudo user with no password
+
+`su -c "echo '$USER ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/$USER"`
