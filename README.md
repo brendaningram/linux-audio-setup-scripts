@@ -1,4 +1,4 @@
-# Brendan Ingram Music
+# Brendan Ingram Audio
 
 ## Installation Scripts
 
