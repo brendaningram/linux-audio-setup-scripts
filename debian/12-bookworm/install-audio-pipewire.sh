@@ -3,7 +3,7 @@
 # This is a bash script for configuring Debian 12 (bookworm) for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/debian-bookworm-install-audio-pipewire.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/debian/12-bookworm/install-audio-pipewire.sh | bash
 
 # Exit if any command fails
 set -e
@@ -101,7 +101,7 @@ sudo apt update
 # Install Bitwig
 # ---------------------------
 notify "Install Bitwig"
-wget -O bitwig.deb https://downloads-as.bitwig.com/stable/4.0.4/bitwig-studio-4.0.4.deb
+wget -O bitwig.deb https://downloads-as.bitwig.com/stable/4.0.5/bitwig-studio-4.0.5.deb
 sudo apt install ./bitwig.deb -y
 rm bitwig.deb
 
@@ -112,7 +112,7 @@ rm bitwig.deb
 # 6.36
 # ---------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper636_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper638_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -145,7 +145,7 @@ winetricks corefonts
 # NOTE: When you run this script, there may be a newer version.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
 notify "Install yabridge"
-wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.5.2/yabridge-3.5.2.tar.gz
+wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.6.0/yabridge-3.6.0.tar.gz
 mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz

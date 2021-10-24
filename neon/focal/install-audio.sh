@@ -1,14 +1,19 @@
+#!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Ubuntu 20.04 (focal) for pro audio.
+# This is a bash script for configuring KDE Neon (based on Ubuntu 20.04) for pro audio.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/main/ubuntu-focal-install-audio.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/neon/focal/install-audio.sh | bash
+
+# Exit if any command fails
+set -e
 
 notify () {
   echo "----------------------------------"
   echo $1
   echo "----------------------------------"
 }
+
 
 # ---------------------------
 # Update our system
@@ -41,21 +46,10 @@ sudo apt install cadence -y
 
 
 # ---------------------------
-# cpufrequtils
-# This tool allows our CPU to run at maximum performance
-# On a laptop this will drain the battery faster,
-# but will result in much better audio performance.
-# ---------------------------
-notify "CPU Frequency"
-sudo apt install cpufrequtils -y
-echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
-
-
-# ---------------------------
 # grub
 # ---------------------------
-notify "GRUB options"
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash threadirqs mitigations=off"/g' /etc/default/grub
+notify "Modify GRUB options"
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash threadirqs mitigations=off cpufreq.default_governor=performance"/g' /etc/default/grub
 sudo update-grub
 
 
@@ -65,7 +59,7 @@ sudo update-grub
 notify "sysctl.conf"
 # See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 echo 'vm.swappiness=10
-fs.inotify.max_user_watches=524288' | sudo tee -a /etc/sysctl.conf
+fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
 
 
 # ---------------------------
@@ -87,7 +81,7 @@ sudo apt update
 # Install Bitwig
 # ---------------------------
 notify "Install Bitwig"
-wget -O bitwig.deb https://downloads-as.bitwig.com/stable/4.0.4/bitwig-studio-4.0.4.deb
+wget -O bitwig.deb https://downloads-as.bitwig.com/stable/4.0.5/bitwig-studio-4.0.5.deb
 sudo apt install ./bitwig.deb -y
 rm bitwig.deb
 
@@ -95,9 +89,9 @@ rm bitwig.deb
 # ---------------------------
 # Install Reaper
 # NOTE: As of the date of this commit, the most recent version of Reaper is:
-# 6.36
+# 6.38
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper636_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper638_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -116,13 +110,16 @@ sudo apt-key add winehq.key
 rm winehq.key
 sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' -y
 sudo apt update
-sudo apt install --install-recommends winehq-staging -y
+sudo apt install --install-recommends winehq-staging winetricks -y
+
+# Base wine packages required for proper plugin functionality
+winetricks corefonts
 
 # Download and install yabridge
 # NOTE: When you run this script, there may be a newer version.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
 notify "Install yabridge"
-wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.5.2/yabridge-3.5.2.tar.gz
+wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.6.0/yabridge-3.6.0.tar.gz
 mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz

@@ -3,7 +3,7 @@
 # This is a bash script for configuring Debian Bookworm as a usable Windows or Mac replacement.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/debian-bookworm-install.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/debian/12-bookworm/install-desktop-plasma.sh | bash
 
 # Exit if any command fails
 set -e

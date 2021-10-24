@@ -3,7 +3,7 @@
 # This is a bash script for configuring Debian 11 (bullseye) for pro audio.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# sudo apt install wget -y && wget -O - https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/main/debian/11-bullseye/debian-bullseye-install-audio.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/debian/11-bullseye/install-audio.sh | bash
 
 # Exit if any command fails
 set -e
