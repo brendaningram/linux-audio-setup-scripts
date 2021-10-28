@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# WARNING: This script is a work in progress.
+
 # ---------------------------
 # This is a bash script for configuring Debian Bookworm as a usable Windows or Mac replacement.
 # ---------------------------
@@ -15,14 +18,27 @@ notify () {
 }
 
 # TODO: 
-# liquorix kernel
 # linux linux-firmware intel-ucode
 # latest firefox
 # chrome?
 # vs code
 # makemkv
 # moka icon and gnome-tweaks
+# OBS needs this set in order to be able to access wayland screens
+#echo "export QT_QPA_PLATFORM=wayland" | sudo tee -a /etc/profile
 
+
+# ------------------------------------------------------------------------------------
+# Add ourselves as sudo
+# NOTE: My machine is physically secured, so I specify NOPASSWD for sudo convenience.
+# ------------------------------------------------------------------------------------
+notify "Add $USER to sudoers.d"
+echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$USER
+
+# ------------------------------------------------------------------------------------
+# Update sources
+# ------------------------------------------------------------------------------------
+notify "Update apt sources"
 echo "deb http://deb.debian.org/debian/ bookworm main contrib non-free
 deb-src http://deb.debian.org/debian/ bookworm main contrib non-free
 
@@ -33,50 +49,149 @@ deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free
 deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free" | sudo tee /etc/apt/sources.list
 
 
+# ------------------------------------------------------------------------------------
+# Update our system
+# ------------------------------------------------------------------------------------
+notify "Update the system"
+sudo apt update && sudo apt dist-upgrade -y
+sudo apt autoremove -y
+
 
 # ------------------------------------------------------------------------------------
-# Add ourselves as sudo
-# NOTE: My machine is physically secured, so I specify NOPASSWD for sudo convenience.
+# GRUB background image
 # ------------------------------------------------------------------------------------
-echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$USER
+notify "Set a nice Debian GRUB image"
+wget https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/debian/debian-wallpaper.tga
+sudo mv debian-wallpaper.tga /boot/grub/
+sudo update-grub
+
 
 # ------------------------------------------------------------------------------------
-# Core install
+# Desktop environment
+# https://wiki.debian.org/gnome
 # ------------------------------------------------------------------------------------
-sudo apt update && sudo apt full-upgrade
+notify "Install applications"
 
-# Utils
-sudo apt install vim git nfs-common firmware-linux neofetch -y
+# Firmware
+# We add the contrib and non-free repositories above to give us the broadest range of firmware
+sudo apt install firmware-linux -y
 
-# Browsers
-#sudo apt install firefox chromium -y
+# Useful utilities
+sudo apt install git vim nfs-common -y
 
-# Office and editing
-sudo apt install libreoffice -y
+# Timeshift allows us to take snapshots of our system at points in time.
+# This means if something happens to our system to break it, we can
+# roll back to a previously working snapshot.
+sudo apt install timeshift -y
 
-# Audio
-# pulseaudio-jack: To bridge pulse to jack using Cadence
-# alsa-utils: For alsamixer (to increase base level of sound card)
-# harvid: Ardour video
-#sudo apt install cadence pulseaudio-jack alsa-utils ardour -y
+# Image editing
+# Use this instead of: Photoshop
+sudo apt install krita -y
 
-# Video
-sudo apt install digikam kdenlive vlc obs-studio handbrake -y
+# Vector editing
+# Use this instead of: Illustrator
+sudo apt install inkscape -y
 
-# Image and Graphics
-sudo apt install digikam krita blender inkscape -y
+# Photo management
+# Use this instead of: Lightroom
+sudo apt install digikam -y
+
+# Video editing
+# Use this instead of: Davinci Resolve, iMovie
+#sudo apt install kdenlive handbrake -y
+
+# Video playing
+sudo apt install vlc -y
+
+# Screen recording and streaming
+# OBS works on Mac, Windows, and Linux
+# It is the universally accepted application for streaming
+sudo apt install obs-studio -y
+
 
 # Games
-sudo apt install 0ad -y
+#sudo apt install 0ad -y
 
 # Copying music CD's
-sudo apt install asunder vorbis-tools -y
+#sudo apt install asunder vorbis-tools -y
 
 # Evaluating
 #sudo apt install gnucash xournalpp
 
-# Resolve Gnome Software "no plugin could handle get-updates"
-#sudo apt install gnome-software-packagekit-plugin -y
+
+# ------------------------------------------------------------------------------------
+# Firefox
+# ------------------------------------------------------------------------------------
+notify "Firefox"
+read -p "Would you like to use the latest Firefox from Mozilla instead of Firefox ESR from Debian (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    sudo apt remove firefox-esr -y
+    wget -q -O firefox.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US"
+    sudo tar -C /opt -xf firefox.tar.bz2
+    rm firefox.tar.bz2
+
+    echo "[Desktop Entry]
+    Name=Firefox Stable
+    Comment=Web Browser
+    Exec=/opt/firefox/firefox %u
+    Terminal=false
+    Type=Application
+    Icon=/opt/firefox/browser/chrome/icons/default/default128.png
+    Categories=Network;WebBrowser;
+    MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/vnd.mozilla.xul+xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;
+    StartupNotify=true" | sudo tee /usr/share/applications/firefox.desktop
+
+    sudo rm /usr/local/bin/firefox
+    sudo ln -s /opt/firefox/firefox /usr/local/bin/firefox
+
+    sudo update-alternatives --install /usr/bin/x-www-browser x-www-browser /opt/firefox/firefox 200 && sudo update-alternatives --set x-www-browser /opt/firefox/firefox
+fi
+
+
+# ------------------------------------------------------------------------------------
+# Google Chrome
+# ------------------------------------------------------------------------------------
+notify "Google Chrome"
+read -p "Would you like to install Google Chrome (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    sudo apt remove firefox-esr -y
+    wget -q -O chrome.deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+    sudo apt install ./chrome.deb
+    rm chrome.deb
+fi
+
+
+# ------------------------------------------------------------------------------------
+# VS Codium
+# ------------------------------------------------------------------------------------
+notify "VSCodium"
+read -p "Install VSCodium (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
+    echo 'deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ] https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main' | sudo tee /etc/apt/sources.list.d/vscodium.list
+    sudo apt update && sudo apt install codium -y
+fi
+
+
+# ------------------------------------------------------------------------------------
+# Dropbox
+# ------------------------------------------------------------------------------------
+notify "Dropbox"
+read -p "Install Dropbox (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    wget -O dropbox.deb https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2020.03.04_amd64.deb
+    sudo apt install ./dropbox.deb -y
+    rm ./dropbox.deb
+fi
+
 
 
 
@@ -135,52 +250,5 @@ gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profi
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ scrollbar-policy 'never'
 
 
-# OBS needs this set in order to be able to access wayland screens
-#echo "export QT_QPA_PLATFORM=wayland" | sudo tee -a /etc/profile
-
-
-
-# ------------------------------------------------------------------------------------
-# Dropbox
-# ------------------------------------------------------------------------------------
-wget -O dropbox.deb https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2020.03.04_amd64.deb
-sudo apt install ./dropbox.deb -y
-rm ./dropbox.deb
-
-# ------------------------------------------------------------------------------------
-# My personal config
-# ------------------------------------------------------------------------------------
-
-echo "[Unit]
-  Description=NAS: mount
-  Requires=network-online.target
-  After=network-online.service
-
-[Mount]
-  What=192.168.20.15:/volume1/NAS
-  Where=/mnt/NAS
-  Options=
-  Type=nfs
-
-[Install]
-  WantedBy=multi-user.target" | sudo tee /etc/systemd/system/mnt-NAS.mount
-  
-  
-echo "[Unit]
-  Description=NAS: Automount
-  Requires=network-online.target
-  After=network-online.service
-
-[Automount]
-  Where=/mnt/NAS
-  TimeoutIdleSec=86400
-
-[Install]
-  WantedBy=multi-user.target" | sudo tee /etc/systemd/system/mnt-NAS.automount
-
-sudo systemctl enable mnt-NAS.automount
-sudo systemctl start mnt-NAS.automount
-
 
 notify "Done!"
-

@@ -39,7 +39,7 @@ sudo apt install pipewire pipewire-audio-client-libraries libspa-0.2-jack pipewi
 
 sudo apt install qjackctl --no-install-recommends -y
 
-# All apps that use JACK will now use the Pipewire JACK
+# Tell all apps that use JACK to now use the Pipewire JACK
 sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-*.conf /etc/ld.so.conf.d/
 sudo ldconfig
 
@@ -60,7 +60,7 @@ sudo ldconfig
 # grub
 # ---------------------------
 notify "Modify GRUB options"
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet threadirqs mitigations=off"/g' /etc/default/grub
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet threadirqs cpufreq.default_governor=performance"/g' /etc/default/grub
 sudo update-grub
 
 
@@ -108,8 +108,6 @@ rm bitwig.deb
 
 # ---------------------------
 # Install Reaper
-# NOTE: As of the date of this commit, the most recent version of Reaper is:
-# 6.36
 # ---------------------------
 notify "Install Reaper"
 wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper638_linux_x86_64.tar.xz

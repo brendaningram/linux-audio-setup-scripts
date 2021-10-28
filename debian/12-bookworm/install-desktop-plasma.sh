@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# WARNING: This script is a work in progress.
+
 # ---------------------------
 # This is a bash script for configuring Debian Bookworm as a usable Windows or Mac replacement.
 # ---------------------------
@@ -17,16 +20,20 @@ notify () {
 # TODO: 
 # prompt to ask about cloud - e.g. dropbox, pcloud
 # k3b - cd ripping
-# liquorix kernel
-# latest firefox
 # chrome?
 # vs code
 # makemkv
 # pcloud-drive
+# kde-config-tablet for Wacom tablet config
 
 # iPhone connectivity
 # kio-fuse ifuse gvfs-fuse ideviceinstaller libimobiledevice-utils python3-imobiledevice python3-plist libusbmuxd6 libusbmuxd-tools
 
+# i915 firmware
+#git clone https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+#sudo cp -r ./linux-firmware/i915 /lib/firmware
+#sudo update-initramfs -u -k all
+#(then sudo apt-get update -y)
 
 # ------------------------------------------------------------------------------------
 # Add ourselves as sudo
@@ -51,10 +58,19 @@ deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free" | 
 
 
 # ------------------------------------------------------------------------------------
-# Core install
+# Update
 # ------------------------------------------------------------------------------------
 notify "Update the system"
 sudo apt update && sudo apt full-upgrade -y
+
+
+# ------------------------------------------------------------------------------------
+# GRUB background image
+# ------------------------------------------------------------------------------------
+wget https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/debian/debian-wallpaper.tga
+sudo mv debian-wallpaper.tga /boot/grub/
+sudo update-grub
+
 
 # ------------------------------------------------------------------------------------
 # Desktop environment
@@ -83,37 +99,11 @@ sudo apt install firefox-esr chromium -y
 # Office and editing
 sudo apt install libreoffice-plasma libreoffice -y
 
-# Audio
-# pulseaudio-jack: To bridge pulse to jack using Cadence
-# alsa-utils: For alsamixer (to increase base level of sound card)
-# harvid: Ardour video
-#sudo apt install cadence pulseaudio-jack alsa-utils ardour -y
-
 # Video
 sudo apt install digikam kdenlive vlc obs-studio handbrake -y
 
 # Image and Graphics
 sudo apt install digikam krita blender inkscape -y
-
-# Games
-#sudo apt install 0ad -y
-
-# Copying music CD's
-#sudo apt install asunder vorbis-tools -y
-
-# Evaluating
-#sudo apt install gnucash xournalpp
-
-# Resolve Gnome Software "no plugin could handle get-updates"
-#sudo apt install gnome-software-packagekit-plugin -y
-
-
-# ------------------------------------------------------------------------------------
-# GRUB background image
-# ------------------------------------------------------------------------------------
-wget https://raw.githubusercontent.com/brendan-ingram-music/install-scripts/master/debian/debian-wallpaper.tga
-sudo mv debian-wallpaper.tga /boot/grub/
-sudo update-grub
 
 
 # ------------------------------------------------------------------------------------
@@ -179,4 +169,3 @@ fi
 
 
 notify "Done!"
-

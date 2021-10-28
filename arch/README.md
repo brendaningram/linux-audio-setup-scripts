@@ -3,6 +3,7 @@
 This guide is a **step by step and end to end guide** that will set up an Arch Linux operating system with:
 
 - UEFI using GRUB
+- EXT4 file system
 - Gnome
 - timeshift
 - audio

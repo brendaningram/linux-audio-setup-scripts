@@ -25,7 +25,7 @@ fi
 
 
 # ------------------------------------------------------------------------------------
-# Add ourselves as sudo
+# If you aren't allowed sudo, you can add yourself with:
 # ------------------------------------------------------------------------------------
 #su -c "echo '$USER ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/$USER"
 
@@ -34,7 +34,7 @@ fi
 # ------------------------------------------------------------------------------------
 sudo pacman -Syu
 
-# Firmware (for e.g. wifi)
+# Firmware (for example to enable wifi)
 sudo pacman -S linux-firmware --noconfirm
 
 # Utils
