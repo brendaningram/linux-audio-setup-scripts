@@ -70,6 +70,17 @@ sudo update-grub
 # Desktop environment
 # https://wiki.debian.org/gnome
 # ------------------------------------------------------------------------------------
+
+# Cleanup
+notify "Application cleanup"
+read -p "Would you like a minimalist system? Note this will remove gnome games, maps, weather, shotwell etc. (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  sudo apt remove gnome-todo gnome-games rhythmbox gnome-weather gnome-maps totem gnome-music gnome-documents shotwell evolution
+fi
+
+
 notify "Install applications"
 
 # Firmware

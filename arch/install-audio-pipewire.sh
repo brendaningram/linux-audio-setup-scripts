@@ -25,7 +25,7 @@ sudo pacman -Syu
 # Audio
 notify "Install audio packages"
 # alsa-utils: For alsamixer (to increase base level of sound card)
-sudo pacman -S pipewire pipewire-alsa pipewire-jack pipewire-pulse alsa-utils helvum ardour --noconfirm
+sudo pacman -S pipewire pipewire-alsa pipewire-jack pipewire-pulse alsa-utils helvum ardour
 
 
 # ---------------------------
@@ -35,7 +35,7 @@ sudo pacman -S pipewire pipewire-alsa pipewire-jack pipewire-pulse alsa-utils he
 # ---------------------------
 notify "Modify GRUB options"
 sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet threadirqs cpufreq.default_governor=performance"/g' /etc/default/grub
-sudo update-grub
+sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 
 # ---------------------------
@@ -73,7 +73,7 @@ yay -S bitwig-studio --noconfirm
 # Reaper
 # ------------------------------------------------------------------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper637_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper638_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -95,8 +95,8 @@ sudo pacman -S wine-staging winetricks --noconfirm
 
 # Downgrade to 6.14 (6.15 and 6.16 don't work with yabridge)
 # Note: as of 10th October 2021 the correct number is 82 (6.14)
-yay -S downgrade --noconfirm
-sudo env DOWNGRADE_FROM_ALA=1 downgrade wine-staging
+#yay -S downgrade --noconfirm
+#sudo env DOWNGRADE_FROM_ALA=1 downgrade wine-staging
 
 # Base wine packages required for proper plugin functionality
 winetricks corefonts

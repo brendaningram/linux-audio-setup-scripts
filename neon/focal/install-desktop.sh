@@ -1,7 +1,7 @@
 #!/bin/bash
-# ---------------------------
+# ------------------------------------------------------------------------------------
 # This is a bash script for configuring KDE Neon as a usable Windows or Mac replacement.
-# ---------------------------
+# ------------------------------------------------------------------------------------
 # NOTE: Execute this script by running the following command on your system:
 # wget -O - https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/neon/focal/install-desktop.sh | bash
 
@@ -14,18 +14,24 @@ notify () {
   echo "----------------------------------"
 }
 
+# ------------------------------------------------------------------------------------
+# Add ourselves as sudo
+# NOTE: My machine is physically secured, so I specify NOPASSWD for sudo convenience.
+# ------------------------------------------------------------------------------------
+notify "Add $USER to sudoers.d"
+echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$USER
 
-# ---------------------------
+# ------------------------------------------------------------------------------------
 # Update our system
-# ---------------------------
+# ------------------------------------------------------------------------------------
 notify "Update the system"
 sudo apt update && sudo apt dist-upgrade -y
 sudo apt autoremove -y
 
 
-# ---------------------------
+# ------------------------------------------------------------------------------------
 #
-# ---------------------------
+# ------------------------------------------------------------------------------------
 notify "Install applications"
 
 # Useful utilities
@@ -46,7 +52,7 @@ sudo apt install digikam -y
 
 # Video editing
 # Use this instead of: Davinci Resolve, iMovie
-sudo apt install kdenlive -y
+#sudo apt install kdenlive -y
 
 # Screen recording and streaming
 # OBS works on Mac, Windows, and Linux
