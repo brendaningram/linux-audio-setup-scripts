@@ -15,6 +15,18 @@ notify () {
   echo "----------------------------------"
 }
 
+
+# ------------------------------------------------------------------------------------
+# yay (AUR)
+# ------------------------------------------------------------------------------------
+sudo pacman -S base-devel --noconfirm
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si --noconfirm
+cd ..
+rm -rf yay
+
+
 # ------------------------------------------------------------------------------------
 # Core install
 # ------------------------------------------------------------------------------------
@@ -27,8 +39,12 @@ sudo pacman -S linux-firmware --noconfirm
 # xdg-desktop-portal is required for OBS to access pipewire displays
 sudo pacman -S sudo vim git nfs-utils wget which xdg-desktop-portal xdg-utils neofetch --noconfirm
 
+# PDF
+sudo pacman -S evince --noconfirm
+
 # Browsers
 sudo pacman -S firefox chromium --noconfirm
+yay -S google-chrome --noconfirm
 
 # Office and editing
 sudo pacman -S libreoffice-fresh code --noconfirm
@@ -48,22 +64,6 @@ sudo pacman -S gnome-software-packagekit-plugin --noconfirm
 
 # OBS needs this set in order to be able to access wayland screens
 echo "export QT_QPA_PLATFORM=wayland" | sudo tee -a /etc/profile
-
-
-# ------------------------------------------------------------------------------------
-# yay (AUR)
-# ------------------------------------------------------------------------------------
-sudo pacman -S base-devel --noconfirm
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si --noconfirm
-cd
-rm -rf yay
-
-
-# ------------------------------------------------------------------------------------
-# AUR packages
-# ------------------------------------------------------------------------------------
 
 # Timeshift
 yay -S timeshift --noconfirm
@@ -130,13 +130,13 @@ yay -S ttf-font-awesome adobe-source-code-pro-fonts --noconfirm
 gsettings set org.gtk.Settings.FileChooser sort-directories-first true
 
 # Minimize button
-gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
+#gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
 
 # 12 hour time display
 gsettings set org.gnome.desktop.interface clock-format 12h
 
 # Dark theme
-gsettings set org.gnome.desktop.interface gtk-theme Adwaita
+#gsettings set org.gnome.desktop.interface gtk-theme Adwaita
 #gsettings set org.gnome.desktop.interface gtk-theme gnome-professional-40.1
 
 # Default calendar
@@ -151,14 +151,14 @@ gsettings set org.gnome.desktop.peripherals.mouse natural-scroll false
 # Touchpad
 gsettings set org.gnome.desktop.peripherals.touchpad disable-while-typing true
 gsettings set org.gnome.desktop.peripherals.touchpad click-method 'fingers'
-gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click  true
+gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click true
 gsettings set org.gnome.desktop.peripherals.touchpad two-finger-scrolling-enabled true
 gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
 
 # Terminal
 gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode: 'tab'
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ visible-name 'Default'
-gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ login-shell false
+#gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ login-shell false
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ default-size-columns 140
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ default-size-rows 40
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ scrollbar-policy 'never'

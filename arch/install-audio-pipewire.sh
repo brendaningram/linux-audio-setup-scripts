@@ -20,12 +20,16 @@ notify () {
 # Install packages
 # ------------------------------------------------------------------------------------
 notify "Update our system"
+echo "NOTE: When prompted, select (y)es to remove pulseaudio and pulseaudio-bluetooth."
 sudo pacman -Syu
 
 # Audio
 notify "Install audio packages"
 # alsa-utils: For alsamixer (to increase base level of sound card)
 sudo pacman -S pipewire pipewire-alsa pipewire-jack pipewire-pulse alsa-utils helvum ardour
+
+echo "/usr/lib/pipewire-0.3/jack" | sudo tee /etc/ld.so.conf.d/pipewire-jack.conf
+sudo ldconfig
 
 
 # ---------------------------
@@ -73,7 +77,7 @@ yay -S bitwig-studio --noconfirm
 # Reaper
 # ------------------------------------------------------------------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper638_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper640_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -93,7 +97,9 @@ sudo pacman -Syyu
 # Install wine-staging
 sudo pacman -S wine-staging winetricks --noconfirm
 
-# Downgrade to 6.14 (6.15 and 6.16 don't work with yabridge)
+# NOTE: If wine-staging has regressions, you may need to downgrade.
+# You can do that by installing the downgrade package from AUR and
+# then specifying the version of wine-staging you want.
 # Note: as of 10th October 2021 the correct number is 82 (6.14)
 #yay -S downgrade --noconfirm
 #sudo env DOWNGRADE_FROM_ALA=1 downgrade wine-staging
