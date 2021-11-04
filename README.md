@@ -22,7 +22,7 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
 - **KDE Neon**
   - [20.04 (based on focal)](neon/neon-focal-install-audio.sh)
 - **Manjaro**
-  - coming soon
+  - [Pipewire](manjaro/install-audio-pipewire.sh)
 - **Mint**
   - [20 (uma)](mint/mint-uma-install-audio.sh)
 - **Ubuntu**
