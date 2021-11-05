@@ -91,7 +91,7 @@ sudo apt update
 # Install Bitwig
 # ---------------------------
 notify "Install Bitwig"
-wget -O bitwig.deb https://downloads-as.bitwig.com/stable/4.0.5/bitwig-studio-4.0.5.deb
+wget -O bitwig.deb https://downloads-as.bitwig.com/stable/4.0.7/bitwig-studio-4.0.7.deb
 sudo apt install ./bitwig.deb -y
 rm bitwig.deb
 
