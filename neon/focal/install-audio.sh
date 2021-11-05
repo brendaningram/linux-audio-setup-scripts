@@ -32,6 +32,16 @@ sudo apt autoremove -y
 
 
 # ---------------------------
+# Install the Liquorix kernel
+# https://liquorix.net/
+# ---------------------------
+notify "Install the Liquorix kernel"
+sudo add-apt-repository ppa:damentz/liquorix && sudo apt-get update
+sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64
+
+
+
+# ---------------------------
 # Install kxstudio and cadence
 # Cadence is a tool for managing audio connections to our hardware
 # NOTE: Select "YES" when asked to enable realtime privileges
@@ -81,15 +91,13 @@ sudo apt update
 # Install Bitwig
 # ---------------------------
 notify "Install Bitwig"
-wget -O bitwig.deb https://downloads-as.bitwig.com/stable/4.0.5/bitwig-studio-4.0.5.deb
+wget -O bitwig.deb https://downloads-as.bitwig.com/stable/4.0.7/bitwig-studio-4.0.7.deb
 sudo apt install ./bitwig.deb -y
 rm bitwig.deb
 
 
 # ---------------------------
 # Install Reaper
-# NOTE: As of the date of this commit, the most recent version of Reaper is:
-# 6.38
 # ---------------------------
 wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper640_linux_x86_64.tar.xz
 mkdir ./reaper

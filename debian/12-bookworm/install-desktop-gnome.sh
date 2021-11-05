@@ -169,9 +169,8 @@ read -p "Would you like to install Google Chrome (Y/N)? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    sudo apt remove firefox-esr -y
     wget -q -O chrome.deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-    sudo apt install ./chrome.deb
+    sudo apt install ./chrome.deb -y
     rm chrome.deb
 fi
 
