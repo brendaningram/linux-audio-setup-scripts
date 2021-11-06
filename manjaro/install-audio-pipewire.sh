@@ -17,10 +17,11 @@ notify () {
 }
 
 # ------------------------------------------------------------------------------------
-# Install packages
+# Update and Install packages
 # ------------------------------------------------------------------------------------
 notify "Update our system"
 sudo pacman -Syu
+sudo pacman -S yay --noconfirm
 
 # Remove existing pulseaudio packages before install pipewire pulse below.
 sudo pacman -R pulseaudio-jack pulseaudio-lirc pulseaudio-rtp pulseaudio-zeroconf manjaro-pulse
