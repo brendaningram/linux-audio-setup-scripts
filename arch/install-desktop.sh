@@ -19,7 +19,7 @@ notify () {
 # ------------------------------------------------------------------------------------
 # yay (AUR)
 # ------------------------------------------------------------------------------------
-sudo pacman -S base-devel --noconfirm
+sudo pacman -S base-devel git --noconfirm
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si --noconfirm
@@ -37,7 +37,7 @@ sudo pacman -S linux-firmware --noconfirm
 
 # Utils
 # xdg-desktop-portal is required for OBS to access pipewire displays
-sudo pacman -S sudo vim git nfs-utils wget which xdg-desktop-portal xdg-utils neofetch --noconfirm
+sudo pacman -S sudo vim nfs-utils wget which xdg-desktop-portal xdg-utils neofetch --noconfirm
 
 # PDF
 sudo pacman -S evince --noconfirm

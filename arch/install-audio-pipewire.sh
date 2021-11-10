@@ -26,7 +26,7 @@ sudo pacman -Syu
 # Audio
 notify "Install audio packages"
 # alsa-utils: For alsamixer (to increase base level of sound card)
-sudo pacman -S pipewire pipewire-alsa pipewire-jack pipewire-pulse alsa-utils helvum ardour
+sudo pacman -S pipewire pipewire-alsa pipewire-jack pipewire-pulse alsa-utils helvum ardour --noconfirm
 
 echo "/usr/lib/pipewire-0.3/jack" | sudo tee /etc/ld.so.conf.d/pipewire-jack.conf
 sudo ldconfig
