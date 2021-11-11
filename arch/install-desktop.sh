@@ -67,6 +67,10 @@ sudo pacman -S gnome-software-packagekit-plugin --noconfirm
 # OBS needs this set in order to be able to access wayland screens
 echo "export QT_QPA_PLATFORM=wayland" | sudo tee -a /etc/profile
 
+# Printers
+sudo pacman -S cups system-config-printer --noconfirm
+sudo systemctl enable cups
+
 # Timeshift
 yay -S timeshift --noconfirm
 
@@ -76,7 +80,7 @@ yay -S makemkv --noconfirm
 # Dropbox
 notify "Dropbox"
 read -p "Install Dropbox? (Y/N)? " -n 1 -r
-echo
+echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
   yay -S nautilus-dropbox --noconfirm
@@ -85,7 +89,7 @@ fi
 # pCloud
 notify "pCloud"
 read -p "Install pCloud (Y/N)? " -n 1 -r
-echo
+echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
   yay -S pcloud-drive --noconfirm

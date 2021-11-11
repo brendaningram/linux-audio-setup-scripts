@@ -9,6 +9,8 @@
 set -e
 
 # TODO: Copy jack.conf to ~/.config/pipewire/jack.conf and make appropriate changes
+# mkdir -p ~/.config/pipewire
+# sudo cp /usr/share/pipewire/jack.conf ~/.config/pipewire/jack.conf
 
 notify () {
   echo "----------------------------------"
@@ -20,13 +22,13 @@ notify () {
 # Install packages
 # ------------------------------------------------------------------------------------
 notify "Update our system"
-echo "NOTE: When prompted, select (y)es to remove pulseaudio and pulseaudio-bluetooth."
 sudo pacman -Syu
 
 # Audio
 notify "Install audio packages"
+echo "NOTE: When prompted, select (y)es to remove pulseaudio and pulseaudio-bluetooth."
 # alsa-utils: For alsamixer (to increase base level of sound card)
-sudo pacman -S pipewire pipewire-alsa pipewire-jack pipewire-pulse alsa-utils helvum ardour --noconfirm
+sudo pacman -S pipewire pipewire-alsa pipewire-jack pipewire-pulse alsa-utils helvum ardour
 
 echo "/usr/lib/pipewire-0.3/jack" | sudo tee /etc/ld.so.conf.d/pipewire-jack.conf
 sudo ldconfig
