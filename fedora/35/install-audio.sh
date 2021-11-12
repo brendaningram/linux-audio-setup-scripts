@@ -1,12 +1,16 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Arch for pro audio.
+# This is a bash script for configuring Fedora for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/arch/install-audio-jack.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/fedora/35/install-audio.sh | bash
 
 # Exit if any command fails
 set -e
+
+# TODO: Copy jack.conf to ~/.config/pipewire/jack.conf and make appropriate changes
+# mkdir -p ~/.config/pipewire
+# sudo cp /usr/share/pipewire/jack.conf ~/.config/pipewire/jack.conf
 
 notify () {
   echo "----------------------------------"
@@ -18,13 +22,15 @@ notify () {
 # Install packages
 # ------------------------------------------------------------------------------------
 notify "Update our system"
-sudo pacman -Syu
+sudo dnf update
 
 # Audio
-# pulseaudio-jack: To bridge pulse to jack using Cadence
-# alsa-utils: For alsamixer (to increase base level of sound card)
 notify "Install audio packages"
-sudo pacman -S cadence pulseaudio-jack alsa-utils ardour --noconfirm
+# NOTE: Fedora has a good Pipewire setup OOTB.
+# Not much needs to be done here.
+
+#echo "/usr/lib/pipewire-0.3/jack" | sudo tee /etc/ld.so.conf.d/pipewire-jack.conf
+#sudo ldconfig
 
 
 # ---------------------------
@@ -33,8 +39,8 @@ sudo pacman -S cadence pulseaudio-jack alsa-utils ardour --noconfirm
 # cpufreq.default_governor=performance = TODO
 # ---------------------------
 notify "Modify GRUB options"
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet threadirqs cpufreq.default_governor=performance"/g' /etc/default/grub
-sudo update-grub
+#sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet threadirqs cpufreq.default_governor=performance"/g' /etc/default/grub
+#sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 
 # ---------------------------
@@ -65,7 +71,7 @@ sudo usermod -a -G audio $USER
 # Bitwig
 # ------------------------------------------------------------------------------------
 notify "Install Bitwig"
-yay -S bitwig-studio --noconfirm
+flatpak install flathub com.bitwig.BitwigStudio
 
 
 # ------------------------------------------------------------------------------------
@@ -84,29 +90,25 @@ rm reaper.tar.xz
 # Wine (staging)
 # ------------------------------------------------------------------------------------
 
-# Enable multilib
-sudo cp /etc/pacman.conf /etc/pacman.conf.bak
-cat /etc/pacman.conf.bak | tr '\n' '\f' | sed -e 's/#\[multilib\]\f#Include = \/etc\/pacman.d\/mirrorlist/\[multilib\]\fInclude = \/etc\/pacman.d\/mirrorlist/g'  | tr '\f' '\n' | sudo tee /etc/pacman.conf
-sudo pacman -Syyu
+sudo dnf config-manager --add-repo https://dl.winehq.org/wine-builds/fedora/35/winehq.repo
+sudo dnf install winehq-staging -y
 
-# Install wine-staging
-sudo pacman -S wine-staging winetricks --noconfirm
-
-# NOTE: If wine-staging has regressions, you may need to downgrade.
-# You can do that by installing the downgrade package from AUR and
-# then specifying the version of wine-staging you want.
-# Note: as of 10th October 2021 the correct number is 82 (6.14)
-#yay -S downgrade --noconfirm
-#sudo env DOWNGRADE_FROM_ALA=1 downgrade wine-staging
+# winetricks
+# TODO: Move it to a more suitable location
+wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+chmod +x winetricks
 
 # Base wine packages required for proper plugin functionality
-winetricks corefonts
+./winetricks corefonts
+
 
 # ------------------------------------------------------------------------------------
 # yabridge
 # ------------------------------------------------------------------------------------
 
-yay -S yabridge-bin --noconfirm
+# BLOCKER: yabridge isn't available on Fedora 35 yet
+sudo dnf copr enable patrickl/yabridge
+sudo dnf install yabridge
 
 # Create common VST paths
 mkdir -p "$HOME/.wine/drive_c/Program Files/Steinberg/VstPlugins"

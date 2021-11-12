@@ -225,7 +225,7 @@ fi
 gsettings set org.gtk.Settings.FileChooser sort-directories-first true
 
 # Minimize button
-gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
+#gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
 
 
 # 12 hour time display
@@ -239,7 +239,7 @@ gsettings set org.gnome.desktop.interface gtk-theme Adwaita
 gsettings set org.gnome.desktop.default-applications.office.calendar exec gnome-calendar
 
 # Don't suspend when plugged in
-gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type: 'nothing'
+gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
 
 # Mouse
 gsettings set org.gnome.desktop.peripherals.mouse natural-scroll false
@@ -252,7 +252,7 @@ gsettings set org.gnome.desktop.peripherals.touchpad two-finger-scrolling-enable
 gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
 
 # Terminal
-gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode: 'tab'
+gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode 'tab'
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ visible-name 'Default'
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ login-shell false
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ default-size-columns 140
