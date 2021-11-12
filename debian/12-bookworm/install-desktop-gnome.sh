@@ -74,7 +74,7 @@ sudo update-grub
 # Cleanup
 notify "Application cleanup"
 read -p "Would you like a minimalist system? Note this will remove gnome games, maps, weather, shotwell etc. (Y/N)? " -n 1 -r
-echo
+echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
   sudo apt remove gnome-todo gnome-games rhythmbox gnome-weather gnome-maps totem gnome-music gnome-documents shotwell evolution
@@ -135,7 +135,7 @@ sudo apt install obs-studio -y
 # ------------------------------------------------------------------------------------
 notify "Firefox"
 read -p "Would you like to use the latest Firefox from Mozilla instead of Firefox ESR from Debian (Y/N)? " -n 1 -r
-echo
+echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     sudo apt remove firefox-esr -y
@@ -166,7 +166,7 @@ fi
 # ------------------------------------------------------------------------------------
 notify "Google Chrome"
 read -p "Would you like to install Google Chrome (Y/N)? " -n 1 -r
-echo
+echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     wget -q -O chrome.deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
@@ -180,7 +180,7 @@ fi
 # ------------------------------------------------------------------------------------
 notify "VSCodium"
 read -p "Install VSCodium (Y/N)? " -n 1 -r
-echo
+echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
@@ -194,7 +194,7 @@ fi
 # ------------------------------------------------------------------------------------
 notify "Dropbox"
 read -p "Install Dropbox (Y/N)? " -n 1 -r
-echo
+echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     wget -O dropbox.deb https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2020.03.04_amd64.deb
