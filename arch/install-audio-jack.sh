@@ -3,7 +3,7 @@
 # This is a bash script for configuring Arch for pro audio.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/arch/install-audio-jack.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/install-scripts/main/arch/install-audio-jack.sh | bash
 
 # Exit if any command fails
 set -e

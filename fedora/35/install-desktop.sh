@@ -3,7 +3,7 @@
 # This is a bash script for configuring Fedora as a usable Windows or Mac replacement.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/fedora/35/install-desktop.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/install-scripts/main/fedora/35/install-desktop.sh | bash
 
 # Exit if any command fails
 set -e

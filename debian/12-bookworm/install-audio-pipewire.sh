@@ -3,7 +3,7 @@
 # This is a bash script for configuring Debian 12 (bookworm) for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningramaudio/install-scripts/main/debian/12-bookworm/install-audio-pipewire.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/install-scripts/main/debian/12-bookworm/install-audio-pipewire.sh | bash
 
 # Exit if any command fails
 set -e
@@ -101,7 +101,7 @@ sudo apt update
 # Install Bitwig
 # ---------------------------
 notify "Install Bitwig"
-wget -O bitwig.deb https://downloads-as.bitwig.com/stable/4.0.7/bitwig-studio-4.0.7.deb
+wget -O bitwig.deb https://downloads-as.bitwig.com/stable/4.1/bitwig-studio-4.1.deb
 sudo apt install ./bitwig.deb -y
 rm bitwig.deb
 
