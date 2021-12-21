@@ -20,7 +20,7 @@ notify () {
 # Update and Install packages
 # ------------------------------------------------------------------------------------
 notify "Update our system"
-sudo pacman -Syu
+sudo pacman -Syu --noconfirm
 sudo pacman -S yay --noconfirm
 
 # Remove existing pulseaudio packages before install pipewire pulse below.
