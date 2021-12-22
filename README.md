@@ -20,11 +20,11 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
 - **Fedora**
   - coming soon
 - **KDE Neon**
-  - [20.04 (based on focal)](neon/neon-focal-install-audio.sh)
+  - [20.04 (based on focal)](neon/focal/install-audio.sh)
 - **Manjaro**
   - [Pipewire](manjaro/install-audio-pipewire.sh)
 - **Mint**
-  - [20 (uma)](mint/mint-uma-install-audio.sh)
+  - [20 (uma)](mint/uma/install-audio.sh)
 - **Ubuntu**
   - [20.04 (focal)](ubuntu/focal/install-audio.sh)
   - [21.10 (impish) JACK](ubuntu/impish/install-audio-jack.sh)
@@ -32,15 +32,16 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
   - [16](zorinos/16/install-audio.sh)
 
 ## You can find me at:
-- [https://brendaningram.com](https://brendaningram.com)
-- [Patreon](https://www.patreon.com/brendaningramaudio)
-- [Bandcamp](https://brendaningram.bandcamp.com)
-- [Soundcloud](https://soundcloud.com/brendaningramaudio)
+- [Air Audio (Post Production) Studio](https://airaudiostudio.com)
+- [brendaningram.com](https://brendaningram.com)
+- [Patreon](https://www.patreon.com/airaudiostudio)
 - [YouTube](https://www.youtube.com/channel/UCypNYnOtbvtSXEsDWqAEcdA)
+- [Facebook](https://www.facebook.com/airaudiostudio)
+- [Instagram](https://www.instagram.com/airaudiostudio)
 - [Reddit](https://www.reddit.com/user/brendaningram)
-- [Facebook](https://www.facebook.com/brendaningramaudio)
-- [Instagram](https://www.instagram.com/brendaningramaudio)
 - [Discord](https://discord.com/channels/901735226554851418/901735227565682739)
+- [Bandcamp](https://berzgernden.bandcamp.com)
+- [Soundcloud](https://soundcloud.com/berzgernden)
 
 ## Notes:
 
