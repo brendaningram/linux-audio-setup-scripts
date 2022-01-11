@@ -40,7 +40,6 @@ sudo add-apt-repository ppa:damentz/liquorix && sudo apt-get update
 sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64
 
 
-
 # ---------------------------
 # Install kxstudio and cadence
 # Cadence is a tool for managing audio connections to our hardware
@@ -99,7 +98,7 @@ rm bitwig.deb
 # ---------------------------
 # Install Reaper
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper643_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper645_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -127,7 +126,7 @@ winetricks corefonts
 # NOTE: When you run this script, there may be a newer version.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
 notify "Install yabridge"
-wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.6.0/yabridge-3.6.0.tar.gz
+wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.7.0/yabridge-3.7.0.tar.gz
 mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz
