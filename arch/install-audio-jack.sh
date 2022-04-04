@@ -72,7 +72,7 @@ yay -S bitwig-studio --noconfirm
 # Reaper
 # ------------------------------------------------------------------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper651_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper653_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink

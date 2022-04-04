@@ -34,6 +34,15 @@ sudo apt update && sudo apt dist-upgrade -y
 
 
 # ---------------------------
+# Install Liquorix kernel
+# https://liquorix.net/
+# ---------------------------
+sudo apt install curl -y
+curl 'https://liquorix.net/add-liquorix-repo.sh' | sudo bash
+sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64
+
+
+# ---------------------------
 # Install kxstudio and cadence
 # Cadence is a tool for managing audio connections to our hardware
 # NOTE: Select "YES" when asked to enable realtime privileges
@@ -83,7 +92,7 @@ sudo apt update
 # Install Bitwig
 # ---------------------------
 notify "Install Bitwig"
-wget -O bitwig.deb https://downloads.bitwig.com/4.2/bitwig-studio-4.2.deb
+wget -O bitwig.deb https://downloads.bitwig.com/4.2.2/bitwig-studio-4.2.2.deb
 sudo apt install ./bitwig.deb -y
 rm bitwig.deb
 
@@ -92,7 +101,7 @@ rm bitwig.deb
 # Install Reaper
 # ---------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper651_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper653_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -107,6 +116,7 @@ rm reaper.tar.xz
 
 # Install Wine (yabridge needs this)
 notify "Install Wine"
+sudo dpkg --add-architecture i386
 wget -nc https://dl.winehq.org/wine-builds/winehq.key
 sudo apt-key add winehq.key
 rm winehq.key
