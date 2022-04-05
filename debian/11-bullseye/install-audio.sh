@@ -122,7 +122,7 @@ sudo apt-key add winehq.key
 rm winehq.key
 echo 'deb https://dl.winehq.org/wine-builds/debian/ bullseye main' | sudo tee -a /etc/apt/sources.list
 sudo apt update
-sudo apt install --install-recommends winehq-staging winetricks -y
+sudo apt install --install-recommends winehq-staging zenity winetricks -y
 
 # Base wine packages required for proper plugin functionality
 winetricks corefonts

@@ -112,8 +112,6 @@ sudo systemctl enable mnt-NAS.automount
 sudo systemctl start mnt-NAS.automount
 
 
-
-
 # ****************************************************************************************************************************
 # bi_split_obs_recording
 # When I record a video using OBS I have 4 elements
@@ -132,6 +130,9 @@ bi_split_obs_recording () {
     -map 0:a:0 -c copy $filename-vod.aac \
     -map 0:a:1 -c copy $filename-daw.aac \
     -map 0:a:2 -c copy $filename-dsk.aac;
+
+for a in *.aac; do ffmpeg -i "$a" "${a%.aac}.wav"; done
+rm *.aac;
 }
 alias bobs=bi_split_obs_recording
 
