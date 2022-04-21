@@ -23,15 +23,6 @@ sudo apt update && sudo apt dist-upgrade -y
 
 
 # ---------------------------
-# Install the latest low latency kernel
-# ---------------------------
-notify "Install the latest low latency kernel"
-sudo apt install linux-lowlatency-hwe-20.04 -y
-sudo apt remove linux-generic-hwe-20.04 -y
-sudo apt autoremove -y
-
-
-# ---------------------------
 # Install the Liquorix kernel
 # https://liquorix.net/
 # ---------------------------
@@ -41,21 +32,21 @@ sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64
 
 
 # ---------------------------
-# Install kxstudio and cadence
-# Cadence is a tool for managing audio connections to our hardware
+# Install JACK
+# NOTE: I no longer recommend using Cadence. There is nothing wrong with it,
+# however the same results can be achieved with qjackctl while retaining
+# a minimal installation.
 # NOTE: Select "YES" when asked to enable realtime privileges
 # ---------------------------
-notify "Install kxstudio and cadence"
-sudo apt-get install apt-transport-https gpgv -y
-wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
-sudo dpkg -i kxstudio-repos_10.0.3_all.deb
-rm kxstudio-repos_10.0.3_all.deb
-sudo apt update
-sudo apt install cadence -y
+notify "Install JACK"
+sudo apt install qjackctl a2jmidid pulseaudio-module-jack pavucontrol -y
 
 
 # ---------------------------
-# grub
+# Modify GRUB options
+# threadirqs:
+# mitigations=off: 
+# cpufreq.default_governor=performance: 
 # ---------------------------
 notify "Modify GRUB options"
 sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash threadirqs mitigations=off cpufreq.default_governor=performance"/g' /etc/default/grub
@@ -90,7 +81,7 @@ sudo apt update
 # Install Bitwig
 # ---------------------------
 notify "Install Bitwig"
-wget -O bitwig.deb https://downloads.bitwig.com/4.2.2/bitwig-studio-4.2.2.deb
+wget -O bitwig.deb https://downloads.bitwig.com/4.2.3/bitwig-studio-4.2.3.deb
 sudo apt install ./bitwig.deb -y
 rm bitwig.deb
 
@@ -98,7 +89,7 @@ rm bitwig.deb
 # ---------------------------
 # Install Reaper
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper653_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper654_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -121,6 +112,10 @@ sudo apt install --install-recommends winehq-staging winetricks -y
 
 # Base wine packages required for proper plugin functionality
 winetricks corefonts
+
+# Make a copy of .wine, as we will use this in the future as the base of
+# new wine prefixes (when installing plugins)
+cp -r ~/.wine ~/.wine-base
 
 # Download and install yabridge
 # NOTE: When you run this script, there may be a newer version.

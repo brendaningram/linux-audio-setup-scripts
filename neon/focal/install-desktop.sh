@@ -15,12 +15,23 @@ notify () {
 }
 
 
+
 # ------------------------------------------------------------------------------------
 # Add ourselves as sudo
 # NOTE: My machine is physically secured, so I specify NOPASSWD for sudo convenience.
 # ------------------------------------------------------------------------------------
 notify "Add $USER to sudoers.d"
 echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$USER
+
+
+# ------------------------------------------------------------------------------------
+# Install i915 firmware
+# NOTE: ONLY RUN THIS IF YOU HAVE INTEL i915 FIRMWARE REQUIREMENTS
+# ------------------------------------------------------------------------------------
+notify "Install i915 firmware"
+git clone https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+sudo cp -r ./linux-firmware/i915 /lib/firmware
+sudo update-initramfs -u -k all
 
 
 # ------------------------------------------------------------------------------------
@@ -67,13 +78,7 @@ sudo apt install obs-studio -y
 sudo apt install kate -y
 
 # Libreoffice
-# The version in KDE Neon is out of date.
-# Install the latest version from the Libreoffice website.
-wget https://mirror.aarnet.edu.au/pub/tdf/libreoffice/stable/7.2.2/deb/x86_64/LibreOffice_7.2.2_Linux_x86-64_deb.tar.gz
-tar -xf LibreOffice_7.2.2_Linux_x86-64_deb.tar.gz
-sudo apt install ./LibreOffice_7.2.2.2_Linux_x86-64_deb/DEBS/*.deb
-rm -rf ./LibreOffice_7.2.2.2_Linux_x86-64_deb
-rm LibreOffice_7.2.2_Linux_x86-64_deb.tar.gz
+sudo apt install libreoffice-plasma libreoffice-kde5 libreoffice-style-breeze libreoffice-qt5 -y
 
 
 # ------------------------------------------------------------------------------------
