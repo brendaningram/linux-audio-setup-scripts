@@ -53,7 +53,7 @@ deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free" | 
 # Update our system
 # ------------------------------------------------------------------------------------
 notify "Update the system"
-sudo apt update && sudo apt dist-upgrade -y
+sudo apt update && sudo apt full-upgrade -y
 sudo apt autoremove -y
 
 

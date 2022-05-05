@@ -14,7 +14,7 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
   - [JACK](arch/install-audio-jack.sh)
   - [Pipewire](arch/install-audio-pipewire.sh)
 - **Debian**
-  - [Debian 11 (bullseye)](debian/11-bullseye/install-audio.sh)
+  - [Debian 11 (bullseye) JACK](debian/11-bullseye/install-audio-jack.sh)
   - [Debian 12 (bookworm) JACK](debian/12-bookworm/install-audio-jack.sh)
   - [Debian 12 (bookworm) Pipewire](debian/12-bookworm/install-audio-pipewire.sh)
 - **Fedora**
@@ -26,22 +26,37 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
 - **Mint**
   - [20 (uma)](mint/uma/install-audio.sh)
 - **Ubuntu**
-  - [20.04 (focal)](ubuntu/focal/install-audio.sh)
-  - [21.10 (impish) JACK](ubuntu/impish/install-audio-jack.sh)
+  - [20.04 (focal) JACK](ubuntu/focal/install-audio.sh)
+  - [22.04 (jammy) JACK](ubuntu/jammy/install-audio-jack.sh)
+  - [22.04 (jammy) PIPEWIRE](ubuntu/jammy/install-audio-pipewire.sh)
 - **Zorin OS**
   - [16](zorinos/16/install-audio.sh)
 
 ## You can find me at:
-- [Air Audio (Post Production) Studio](https://airaudiostudio.com)
+
+### Personal
+
 - [brendaningram.com](https://brendaningram.com)
-- [Patreon](https://www.patreon.com/airaudiostudio)
-- [YouTube](https://www.youtube.com/channel/UCypNYnOtbvtSXEsDWqAEcdA)
-- [Facebook](https://www.facebook.com/airaudiostudio)
-- [Instagram](https://www.instagram.com/airaudiostudio)
 - [Reddit](https://www.reddit.com/user/brendaningram)
 - [Discord](https://discord.com/channels/901735226554851418/901735227565682739)
-- [Bandcamp](https://berzgernden.bandcamp.com)
-- [Soundcloud](https://soundcloud.com/berzgernden)
+
+### Air Audio (audio news and tutorials)
+
+- [Air Audio](https://airaudiohq.com)
+- [Patreon](https://www.patreon.com/airaudiohq)
+- [YouTube](https://www.youtube.com/channel/UCypNYnOtbvtSXEsDWqAEcdA)
+- [Facebook](https://www.facebook.com/airaudiohq)
+- [Instagram](https://www.instagram.com/airaudiohq)
+
+### Feathernator (my music)
+
+- [Feathernator (my music)](https://feathernator.com)
+- [Bandcamp](https://feathernator.bandcamp.com)
+- [Soundcloud](https://soundcloud.com/feathernator)
+- [YouTube](https://www.youtube.com/channel/UCypNYnOtbvtSXEsDWqAEcdA)
+- [Facebook](https://www.facebook.com/feathernator)
+- [Instagram](https://www.instagram.com/feathernator)
+- [Twitter](https://www.twitter.com/feathernator)
 
 ## Notes:
 

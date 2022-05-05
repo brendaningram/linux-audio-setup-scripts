@@ -18,7 +18,7 @@ notify () {
 # Update our system
 # ---------------------------
 notify "Update the system"
-sudo apt update && sudo apt dist-upgrade -y
+sudo apt update && sudo apt full-upgrade -y
 
 
 # ---------------------------

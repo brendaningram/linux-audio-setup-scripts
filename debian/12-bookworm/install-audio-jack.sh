@@ -1,6 +1,6 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Debian 12 (bookworm) for pro audio USING PIPEWIRE.
+# This is a bash script for configuring Debian 12 (bookworm) for pro audio USING JACK
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
 # wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/debian/12-bookworm/install-audio-jack.sh | bash
