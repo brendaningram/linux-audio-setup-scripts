@@ -1,18 +1,19 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Ubuntu 20.04 (focal) for pro audio.
+# This is a bash script for configuring KDE Neon (based on Ubuntu 20.04) for pro audio.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/install-scripts/main/ubuntu/focal/install-audio.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/neon/focal/install-audio-jack.sh | bash
 
 # Exit if any command fails
 set -e
 
 notify () {
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
   echo $1
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
 }
+
 
 # ---------------------------
 # Update our system
@@ -22,44 +23,48 @@ sudo apt update && sudo apt dist-upgrade -y
 
 
 # ---------------------------
-# Install the latest low latency kernel
+# Install the Liquorix kernel
+# https://liquorix.net/
 # ---------------------------
-notify "Install the latest low latency kernel"
-sudo apt install linux-lowlatency-hwe-20.04 -y
-sudo apt remove linux-generic-hwe-20.04 -y
-sudo apt autoremove -y
+notify "Install the Liquorix kernel"
+sudo add-apt-repository ppa:damentz/liquorix && sudo apt-get update
+sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64
 
 
-# ---------------------------
-# Install kxstudio and cadence
-# Cadence is a tool for managing audio connections to our hardware
+# ------------------------------------------------------------------------------------
+# Cadence or qjackctl
+# NOTE: I no longer recommend using Cadence. There is nothing wrong with it,
+# however the same results can be achieved with qjackctl while retaining
+# a minimal installation.
 # NOTE: Select "YES" when asked to enable realtime privileges
-# ---------------------------
-notify "Install kxstudio and cadence"
-sudo apt-get install apt-transport-https gpgv -y
-wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
-sudo dpkg -i kxstudio-repos_10.0.3_all.deb
-rm kxstudio-repos_10.0.3_all.deb
-sudo apt update
-sudo apt install cadence -y
+# ------------------------------------------------------------------------------------
+notify "Cadence or qjackctl"
+read -p "Would you like to use Cadence (Y) for a simple user experience, or qjackctl (N) for a more powerful, and minimal experience (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  notify "Installing Cadence"
+  sudo apt-get install apt-transport-https gpgv -y
+  wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
+  sudo dpkg -i kxstudio-repos_10.0.3_all.deb
+  rm kxstudio-repos_10.0.3_all.deb
+  sudo apt update
+  sudo apt install cadence -y
+else
+  notify "Installing qjackctl"
+  sudo apt install qjackctl a2jmidid pulseaudio-module-jack pavucontrol -y
+fi
 
 
 # ---------------------------
-# cpufrequtils
-# This tool allows our CPU to run at maximum performance
-# On a laptop this will drain the battery faster,
-# but will result in much better audio performance.
+# Modify GRUB options
+# threadirqs:
+# mitigations=off:
+# cpufreq.default_governor=performance:
 # ---------------------------
-notify "CPU Frequency"
-sudo apt install cpufrequtils -y
-echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
-
-
-# ---------------------------
-# grub
-# ---------------------------
-notify "GRUB options"
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash threadirqs mitigations=off"/g' /etc/default/grub
+notify "Modify GRUB options"
+sudo systemctl disable ondemand
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash threadirqs mitigations=off cpufreq.default_governor=performance"/g' /etc/default/grub
 sudo update-grub
 
 
@@ -69,7 +74,7 @@ sudo update-grub
 notify "sysctl.conf"
 # See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 echo 'vm.swappiness=10
-fs.inotify.max_user_watches=524288' | sudo tee -a /etc/sysctl.conf
+fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
 
 
 # ---------------------------
@@ -98,10 +103,8 @@ rm bitwig.deb
 
 # ---------------------------
 # Install Reaper
-# NOTE: As of the date of this commit, the most recent version of Reaper is:
-# 6.36
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper654_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper656_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -110,20 +113,32 @@ rm reaper.tar.xz
 
 
 # ---------------------------
+# Wine (staging)
+# This is required for yabridge
+# See https://wiki.winehq.org/Ubuntu for additional information.
+# ---------------------------
+notify "Install Wine"
+sudo dpkg --add-architecture i386
+wget -nc https://dl.winehq.org/wine-builds/winehq.key
+sudo mv winehq.key /usr/share/keyrings/winehq-archive.key
+wget -nc https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
+sudo mv winehq-focal.sources /etc/apt/sources.list.d/
+sudo apt update
+sudo apt install --install-recommends winehq-staging winetricks -y
+
+# Base wine packages required for proper plugin functionality
+winetricks corefonts
+
+# Make a copy of .wine, as we will use this in the future as the base of
+# new wine prefixes (when installing plugins)
+cp -r ~/.wine ~/.wine-base
+
+
+# ---------------------------
 # Yabridge
 # Detailed instructions can be found at: https://github.com/robbert-vdh/yabridge/blob/master/README.md
 # ---------------------------
-# Install Wine (yabridge needs this)
-notify "Install Wine"
-wget -nc https://dl.winehq.org/wine-builds/winehq.key
-sudo apt-key add winehq.key
-rm winehq.key
-sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' -y
-sudo apt update
-sudo apt install --install-recommends winehq-staging -y
-
-# Download and install yabridge
-# NOTE: When you run this script, there may be a newer version.
+# NOTE: When you run this script, there may be a newer version of yabridge available.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
 notify "Install yabridge"
 wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.8.1/yabridge-3.8.1.tar.gz

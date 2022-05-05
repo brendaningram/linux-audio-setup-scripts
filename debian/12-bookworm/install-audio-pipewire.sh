@@ -3,22 +3,22 @@
 # This is a bash script for configuring Debian 12 (bookworm) for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/install-scripts/main/debian/12-bookworm/install-audio-pipewire.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/debian/12-bookworm/install-audio-pipewire.sh | bash
 
 # Exit if any command fails
 set -e
 
 notify () {
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
   echo $1
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
 }
 
 # ---------------------------
 # Update our system
 # ---------------------------
 notify "Update the system"
-sudo apt update && sudo apt full-upgrade -y
+sudo apt update && sudo apt dist-upgrade -y
 
 
 # ---------------------------
@@ -26,18 +26,27 @@ sudo apt update && sudo apt full-upgrade -y
 # https://liquorix.net/
 # ---------------------------
 notify "Install the Liquorix kernel"
-wget -O - https://liquorix.net/add-liquorix-repo.sh | sudo bash
+sudo apt install curl
+curl 'https://liquorix.net/add-liquorix-repo.sh' | sudo bash
 sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64 -y
 
 
 # ---------------------------
 # Pipewire
 # https://wiki.debian.org/PipeWire
+# NOTE: If you don't have any audio coming from your system, it is possible that the hardware
+# channels in your audio interface are muted. In that case, run alsamixer, press F6 to select
+# your audio interface, locate your main monitor channel, then press M to unmute.
+# You can then run sudo alsactl store to persist these changes.
 # ---------------------------
 notify "Install pipewire"
-sudo apt install pipewire pipewire-audio-client-libraries libspa-0.2-jack pipewire-pulse -y
+sudo apt remove pipewire-media-session -y
+sudo apt install pipewire pipewire-audio-client-libraries libspa-0.2-jack pipewire-pulse wireplumber -y
 
-sudo apt install qjackctl --no-install-recommends -y
+systemctl --user disable --now pipewire-media-session
+systemctl --user enable --now wireplumber
+
+#sudo apt install qjackctl --no-install-recommends -y
 
 # Tell all apps that use JACK to now use the Pipewire JACK
 sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-*.conf /etc/ld.so.conf.d/
@@ -110,7 +119,7 @@ rm bitwig.deb
 # Install Reaper
 # ---------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper654_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper656_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -119,34 +128,52 @@ rm reaper.tar.xz
 
 
 # ---------------------------
-# Yabridge
-# Detailed instructions can be found at: https://github.com/robbert-vdh/yabridge/blob/master/README.md
+# Wine
+# Detailed instructions can be found at: https://wiki.winehq.org/Debian
 # ---------------------------
+
+mkdir -p ~/.local/share
 
 # Install Wine (yabridge needs this)
 notify "Install Wine Staging"
+sudo dpkg --add-architecture i386
 wget -nc https://dl.winehq.org/wine-builds/winehq.key
-sudo apt-key add winehq.key
-rm winehq.key
-echo 'deb https://dl.winehq.org/wine-builds/debian/ bookworm main' | sudo tee -a /etc/apt/sources.list
+sudo mv winehq.key /usr/share/keyrings/winehq-archive.key
+wget -nc https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
+sudo mv winehq-bookworm.sources /etc/apt/sources.list.d/
 sudo apt update
-sudo apt install --install-recommends winehq-staging -y
+sudo apt install --install-recommends winehq-staging
 
 # Winetricks
-sudo apt install winetricks zenity -y
+#sudo apt install winetricks zenity -y
+wget -O winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+mv winetricks ~/.local/share
+chmod +x ~/.local/share/winetricks
+echo '' >> ~/.bash_aliases
+echo '# Audio: winetricks' >> ~/.bash_aliases
+echo 'export PATH="$PATH:$HOME/.local/share"' >> ~/.bash_aliases
+. ~/.bash_aliases
 
 # NOTE: On first run wine will set up your wineprefix.
 # NOTE: You may see a dialog to install MONO - click "Install".
+sudo apt-get install cabextract -y
 winetricks corefonts
 
-# Download and install yabridge
-# NOTE: When you run this script, there may be a newer version.
+# Make a copy of .wine, as we will use this in the future as the base of
+# new wine prefixes (when installing plugins)
+cp -r ~/.wine ~/.wine-base
+
+# ---------------------------
+# Yabridge
+# Detailed instructions can be found at: https://github.com/robbert-vdh/yabridge/blob/master/README.md
+# NOTE: When you run this script, there may be a newer version of yabridge available.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
+# ---------------------------
 notify "Install yabridge"
 wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.8.1/yabridge-3.8.1.tar.gz
-mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz
+
 echo '' >> ~/.bash_aliases
 echo '# Audio: yabridge path' >> ~/.bash_aliases
 echo 'export PATH="$PATH:$HOME/.local/share/yabridge"' >> ~/.bash_aliases

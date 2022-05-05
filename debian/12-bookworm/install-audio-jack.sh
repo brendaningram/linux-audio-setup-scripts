@@ -3,15 +3,15 @@
 # This is a bash script for configuring Debian 12 (bookworm) for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/install-scripts/main/debian/12-bookworm/install-audio-jack.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/debian/12-bookworm/install-audio-jack.sh | bash
 
 # Exit if any command fails
 set -e
 
 notify () {
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
   echo $1
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
 }
 
 # ---------------------------
@@ -101,7 +101,7 @@ rm bitwig.deb
 # NOTE: As of the date of this commit, the most recent version of Reaper is:
 # 6.36
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper654_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper656_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink

@@ -3,7 +3,7 @@
 # This is a bash script for configuring Arch for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/install-scripts/main/arch/install-audio-pipewire.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/arch/install-audio-pipewire.sh | bash
 
 # Exit if any command fails
 set -e
@@ -13,9 +13,9 @@ set -e
 # sudo cp /usr/share/pipewire/jack.conf ~/.config/pipewire/jack.conf
 
 notify () {
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
   echo $1
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
 }
 
 # ------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ yay -S bitwig-studio --noconfirm
 # Reaper
 # ------------------------------------------------------------------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper654_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper656_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink

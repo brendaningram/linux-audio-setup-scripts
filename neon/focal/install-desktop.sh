@@ -1,24 +1,24 @@
 #!/bin/bash
 # ------------------------------------------------------------------------------------
 # This is a bash script for configuring KDE Neon as a usable Windows or Mac replacement.
+# Whereas the audio scripts are designed to be run in their entirety, this script is
+# more of a guide - please pick and choose the pieces that are relevant to you.
 # ------------------------------------------------------------------------------------
-# NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/install-scripts/main/neon/focal/install-desktop.sh | bash
 
 # Exit if any command fails
 set -e
 
 notify () {
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
   echo $1
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
 }
-
 
 
 # ------------------------------------------------------------------------------------
 # Add ourselves as sudo
 # NOTE: My machine is physically secured, so I specify NOPASSWD for sudo convenience.
+# If you have security concerns, don't do this.
 # ------------------------------------------------------------------------------------
 notify "Add $USER to sudoers.d"
 echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$USER

@@ -1,18 +1,29 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring KDE Neon (based on Ubuntu 20.04) for pro audio.
+# This is a bash script for configuring Debian 11 (bullseye) for pro audio.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/install-scripts/main/neon/focal/install-audio.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/debian/11-bullseye/install-audio.sh | bash
 
 # Exit if any command fails
 set -e
 
 notify () {
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
   echo $1
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
 }
+
+echo "deb http://deb.debian.org/debian/ bullseye main contrib
+deb-src http://deb.debian.org/debian/ bullseye main contrib
+
+deb http://security.debian.org/debian-security bullseye-security main contrib
+deb-src http://security.debian.org/debian-security bullseye-security main contrib
+
+# bullseye-updates, to get updates before a point release is made;
+# see https://www.debian.org/doc/manuals/debian-reference/ch02.en.html#_updates_and_backports
+deb http://deb.debian.org/debian/ bullseye-updates main contrib
+deb-src http://deb.debian.org/debian/ bullseye-updates main contrib" | sudo tee /etc/apt/sources.list
 
 
 # ---------------------------
@@ -23,33 +34,33 @@ sudo apt update && sudo apt dist-upgrade -y
 
 
 # ---------------------------
-# Install the Liquorix kernel
+# Install Liquorix kernel
 # https://liquorix.net/
 # ---------------------------
-notify "Install the Liquorix kernel"
-sudo add-apt-repository ppa:damentz/liquorix && sudo apt-get update
+sudo apt install curl -y
+curl 'https://liquorix.net/add-liquorix-repo.sh' | sudo bash
 sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64
 
 
 # ---------------------------
-# Install JACK
-# NOTE: I no longer recommend using Cadence. There is nothing wrong with it,
-# however the same results can be achieved with qjackctl while retaining
-# a minimal installation.
+# Install kxstudio and cadence
+# Cadence is a tool for managing audio connections to our hardware
 # NOTE: Select "YES" when asked to enable realtime privileges
 # ---------------------------
-notify "Install JACK"
-sudo apt install qjackctl a2jmidid pulseaudio-module-jack pavucontrol -y
+notify "Install kxstudio and cadence"
+sudo apt-get install apt-transport-https gpgv -y
+wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
+sudo dpkg -i kxstudio-repos_10.0.3_all.deb
+rm kxstudio-repos_10.0.3_all.deb
+sudo apt update
+sudo apt install cadence -y
 
 
 # ---------------------------
-# Modify GRUB options
-# threadirqs:
-# mitigations=off: 
-# cpufreq.default_governor=performance: 
+# grub
 # ---------------------------
 notify "Modify GRUB options"
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash threadirqs mitigations=off cpufreq.default_governor=performance"/g' /etc/default/grub
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet threadirqs mitigations=off cpufreq.default_governor=performance"/g' /etc/default/grub
 sudo update-grub
 
 
@@ -89,7 +100,8 @@ rm bitwig.deb
 # ---------------------------
 # Install Reaper
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper654_linux_x86_64.tar.xz
+notify "Install Reaper"
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper656_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -101,21 +113,19 @@ rm reaper.tar.xz
 # Yabridge
 # Detailed instructions can be found at: https://github.com/robbert-vdh/yabridge/blob/master/README.md
 # ---------------------------
+
 # Install Wine (yabridge needs this)
 notify "Install Wine"
+sudo dpkg --add-architecture i386
 wget -nc https://dl.winehq.org/wine-builds/winehq.key
 sudo apt-key add winehq.key
 rm winehq.key
-sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' -y
+echo 'deb https://dl.winehq.org/wine-builds/debian/ bullseye main' | sudo tee -a /etc/apt/sources.list
 sudo apt update
-sudo apt install --install-recommends winehq-staging winetricks -y
+sudo apt install --install-recommends winehq-staging zenity winetricks -y
 
 # Base wine packages required for proper plugin functionality
 winetricks corefonts
-
-# Make a copy of .wine, as we will use this in the future as the base of
-# new wine prefixes (when installing plugins)
-cp -r ~/.wine ~/.wine-base
 
 # Download and install yabridge
 # NOTE: When you run this script, there may be a newer version.

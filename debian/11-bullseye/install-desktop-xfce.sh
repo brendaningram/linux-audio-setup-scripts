@@ -3,15 +3,15 @@
 # This is a bash script for configuring Debian 11 (bullseye) for pro audio.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/install-scripts/main/debian/11-bullseye/install-audio.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/debian/11-bullseye/install-audio.sh | bash
 
 # Exit if any command fails
 set -e
 
 notify () {
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
   echo $1
-  echo "----------------------------------"
+  echo "--------------------------------------------------------------------"
 }
 
 
@@ -32,7 +32,7 @@ sudo apt update && sudo apt dist-upgrade -y
 # GRUB background image
 # ------------------------------------------------------------------------------------
 notify "Set a nice Debian GRUB image"
-wget https://raw.githubusercontent.com/brendaningram/install-scripts/main/debian/debian-wallpaper.tga
+wget https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/debian/debian-wallpaper.tga
 sudo mv debian-wallpaper.tga /boot/grub/
 sudo update-grub
 

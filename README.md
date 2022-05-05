@@ -46,7 +46,7 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
 ## Notes:
 
 #### SSH clone this repository
-`git clone git@github.com:brendaningram/install-scripts.git`
+`git clone git@github.com:brendaningram/linux-audio-setup-scripts.git`
 
 #### To add yourself as a sudo user with no password
 
