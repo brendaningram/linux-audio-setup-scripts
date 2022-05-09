@@ -20,7 +20,7 @@ notify () {
 # Update and Install packages
 # ------------------------------------------------------------------------------------
 notify "Update our system"
-sudo pacman -Syu
+sudo pacman -Syu --noconfirm
 sudo pacman -S yay --noconfirm
 
 # Remove existing pulseaudio packages before install pipewire pulse below.
@@ -83,7 +83,7 @@ yay -S bitwig-studio --noconfirm
 # Reaper
 # ------------------------------------------------------------------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper656_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper657_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink

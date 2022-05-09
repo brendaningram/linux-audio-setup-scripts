@@ -1,4 +1,4 @@
-# Linux Audio Installation Scripts
+# Linux Audio Setup Scripts
 
 *By Brendan Ingram*
 
