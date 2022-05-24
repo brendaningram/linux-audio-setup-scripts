@@ -1,6 +1,6 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring KDE Neon (based on Ubuntu 20.04) for pro audio.
+# This is a bash script for configuring KDE Neon (based on Ubuntu 20.04) for pro audio using JACK.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
 # wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/neon/focal/install-audio-jack.sh | bash
@@ -19,7 +19,7 @@ notify () {
 # Update our system
 # ---------------------------
 notify "Update the system"
-sudo apt update && sudo apt dist-upgrade -y
+sudo pkcon refresh && sudo pkcon update
 
 
 # ---------------------------
@@ -104,7 +104,7 @@ rm bitwig.deb
 # ---------------------------
 # Install Reaper
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper657_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper658_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
