@@ -20,15 +20,16 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
 - **Fedora**
   - coming soon
 - **KDE Neon**
-  - [20.04 (based on focal)](neon/focal/install-audio.sh)
+  - [20.04 (based on focal) JACK](neon/focal/install-audio-jack.sh)
+  - [20.04 (based on focal) Pipewire](neon/focal/install-audio-pipewire.sh)
 - **Manjaro**
   - [Pipewire](manjaro/install-audio-pipewire.sh)
 - **Mint**
   - [20 (uma)](mint/uma/install-audio.sh)
 - **Ubuntu**
-  - [20.04 (focal) JACK](ubuntu/focal/install-audio.sh)
+  - [20.04 (focal) JACK](ubuntu/focal/install-audio-jack.sh)
   - [22.04 (jammy) JACK](ubuntu/jammy/install-audio-jack.sh)
-  - [22.04 (jammy) PIPEWIRE](ubuntu/jammy/install-audio-pipewire.sh)
+  - [22.04 (jammy) Pipewire](ubuntu/jammy/install-audio-pipewire.sh)
 - **Zorin OS**
   - [16](zorinos/16/install-audio.sh)
 
