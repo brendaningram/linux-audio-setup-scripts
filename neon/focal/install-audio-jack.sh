@@ -19,7 +19,7 @@ notify () {
 # Update our system
 # ---------------------------
 notify "Update the system"
-sudo pkcon refresh && sudo pkcon update
+sudo apt update && sudo apt dist-upgrade -y
 
 
 # ---------------------------
@@ -28,7 +28,7 @@ sudo pkcon refresh && sudo pkcon update
 # ---------------------------
 notify "Install the Liquorix kernel"
 sudo add-apt-repository ppa:damentz/liquorix && sudo apt-get update
-sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64
+sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64 -y
 
 
 # ------------------------------------------------------------------------------------
