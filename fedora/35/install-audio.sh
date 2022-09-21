@@ -78,7 +78,7 @@ flatpak install flathub com.bitwig.BitwigStudio
 # Reaper
 # ------------------------------------------------------------------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper658_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper667_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink

@@ -38,12 +38,13 @@ notify "Install Pipewire"
 sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream
 sudo add-apt-repository ppa:pipewire-debian/wireplumber-upstream
 sudo apt-get update
-sudo apt install libfdk-aac2 libldacbt-{abr,enc}2 libopenaptx0
-sudo apt install gstreamer1.0-pipewire libpipewire-0.3-{0,dev,modules} libspa-0.2-{bluetooth,dev,jack,modules} pipewire{,-{audio-client-libraries,pulse,bin,locales,tests}}
-sudo apt-get install wireplumber{,-doc} gir1.2-wp-0.4 libwireplumber-0.4-{0,dev}
+sudo apt install libfdk-aac2 libldacbt-{abr,enc}2 libopenaptx0 -y
+sudo apt install gstreamer1.0-pipewire libpipewire-0.3-{0,dev,modules} libspa-0.2-{bluetooth,dev,jack,modules} pipewire{,-{audio-client-libraries,pulse,bin,locales,tests}} -y
+sudo apt install wireplumber{,-doc} gir1.2-wp-0.4 libwireplumber-0.4-{0,dev} -y
 systemctl --user --now disable pulseaudio.{socket,service}
 systemctl --user mask pulseaudio
 systemctl --user --now enable pipewire{,-pulse}.{socket,service}
+systemctl --user --now enable wireplumber.service
 
 
 # ---------------------------
@@ -86,7 +87,7 @@ sudo apt update
 # Install Bitwig
 # ---------------------------
 notify "Install Bitwig"
-wget -O bitwig.deb https://downloads.bitwig.com/4.2.3/bitwig-studio-4.2.3.deb
+wget -O bitwig.deb https://downloads.bitwig.com/4.3.4/bitwig-studio-4.3.4.deb
 sudo apt install ./bitwig.deb -y
 rm bitwig.deb
 
@@ -94,7 +95,7 @@ rm bitwig.deb
 # ---------------------------
 # Install Reaper
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper658_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper667_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -131,7 +132,7 @@ cp -r ~/.wine ~/.wine-base
 # NOTE: When you run this script, there may be a newer version of yabridge available.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
 notify "Install yabridge"
-wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.8.1/yabridge-3.8.1.tar.gz
+wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/4.0.2/yabridge-4.0.2.tar.gz
 mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz

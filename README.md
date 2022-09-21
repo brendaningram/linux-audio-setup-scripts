@@ -18,7 +18,8 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
   - [Debian 12 (bookworm) JACK](debian/12-bookworm/install-audio-jack.sh)
   - [Debian 12 (bookworm) Pipewire](debian/12-bookworm/install-audio-pipewire.sh)
 - **Fedora**
-  - coming soon
+  - [Fedora 35 Pipewire](fedora/35/install-audio.sh)
+  - [Fedora 36 Pipewire](fedora/36/install-audio.sh)
 - **KDE Neon**
   - [20.04 (based on focal) JACK](neon/focal/install-audio-jack.sh)
   - [20.04 (based on focal) Pipewire](neon/focal/install-audio-pipewire.sh)
