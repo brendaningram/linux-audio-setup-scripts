@@ -106,8 +106,7 @@ chmod +x winetricks
 # yabridge
 # ------------------------------------------------------------------------------------
 
-# BLOCKER: yabridge isn't available on Fedora 36 yet
-sudo dnf copr enable patrickl/yabridge
+sudo dnf copr enable patrickl/yabridge-stable
 sudo dnf install yabridge
 
 # Create common VST paths
