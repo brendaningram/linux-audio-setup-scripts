@@ -95,6 +95,21 @@ then
 fi
 
 
+
+# ------------------------------------------------------------------------------------
+# VS Code
+# ------------------------------------------------------------------------------------
+notify "VS Code"
+read -p "Install VS Code (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    curl -O -L https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+    wget -qO vscode.deb https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+    sudo apt install ./vscode.deb -y
+    rm vscode.deb
+fi
+
 # ------------------------------------------------------------------------------------
 # VS Codium
 # ------------------------------------------------------------------------------------

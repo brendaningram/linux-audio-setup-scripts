@@ -95,7 +95,7 @@ rm bitwig.deb
 # ---------------------------
 # Install Reaper
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper667_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper668_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -140,6 +140,9 @@ echo '' >> ~/.bash_aliases
 echo '# Audio: yabridge path' >> ~/.bash_aliases
 echo 'export PATH="$PATH:$HOME/.local/share/yabridge"' >> ~/.bash_aliases
 . ~/.bash_aliases
+
+# libnotify-bin contains notify-send, which is used for yabridge plugin notifications.
+sudo apt install libnotify-bin -y
 
 # Create common VST paths
 mkdir -p "$HOME/.wine/drive_c/Program Files/Steinberg/VstPlugins"
