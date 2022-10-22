@@ -27,23 +27,24 @@ sudo apt update && sudo apt dist-upgrade -y
 # https://liquorix.net/
 # ---------------------------
 notify "Install the Liquorix kernel"
-sudo add-apt-repository ppa:damentz/liquorix && sudo apt-get update
+sudo add-apt-repository ppa:damentz/liquorix -y && sudo apt-get update
 sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64 -y
 
 
 # ------------------------------------------------------------------------------------
 # Install the latest Pipewire
+# https://pipewire-debian.github.io/pipewire-debian/
 # ------------------------------------------------------------------------------------
 notify "Install Pipewire"
-sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream
-sudo add-apt-repository ppa:pipewire-debian/wireplumber-upstream
-sudo apt-get update
-sudo apt install libfdk-aac2 libldacbt-{abr,enc}2 libopenaptx0 -y
-sudo apt install gstreamer1.0-pipewire libpipewire-0.3-{0,dev,modules} libspa-0.2-{bluetooth,dev,jack,modules} pipewire{,-{audio-client-libraries,pulse,bin,locales,tests}} -y
+sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream -y
+sudo add-apt-repository ppa:pipewire-debian/wireplumber-upstream -y
+sudo apt update
+sudo apt install gstreamer1.0-pipewire libpipewire-0.3-{0,dev,modules} libspa-0.2-{bluetooth,dev,jack,modules} pipewire{,-{audio-client-libraries,pulse,bin,jack,alsa,v4l2,libcamera,locales,tests}} -y
 sudo apt install wireplumber{,-doc} gir1.2-wp-0.4 libwireplumber-0.4-{0,dev} -y
 systemctl --user --now disable pulseaudio.{socket,service}
 systemctl --user mask pulseaudio
-systemctl --user --now enable pipewire{,-pulse}.{socket,service}
+sudo cp -vRa /usr/share/pipewire /etc/
+systemctl --user --now enable pipewire{,-pulse}.{socket,service} filter-chain.service
 systemctl --user --now enable wireplumber.service
 
 
@@ -69,6 +70,15 @@ fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
 
 
 # ---------------------------
+# audio.conf
+# ---------------------------
+notify "audio.conf"
+# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
+echo '@audio - rtprio 90
+@audio - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
+
+
+# ---------------------------
 # Add the user to the audio group
 # ---------------------------
 notify "Add user to the audio group"
@@ -76,31 +86,36 @@ sudo adduser $USER audio
 
 
 # ---------------------------
-# The i386 architecture is required for Bitwig and Wine
+# Bitwig
 # ---------------------------
-notify "Enable i386 architecture"
-sudo dpkg --add-architecture i386
-sudo apt update
+notify "Bitwig"
+read -p "Would you like to install Bitwig (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  sudo dpkg --add-architecture i386
+  sudo apt update
+  wget -O bitwig.deb https://downloads.bitwig.com/4.4/bitwig-studio-4.4.deb
+  sudo apt install ./bitwig.deb -y
+  rm bitwig.deb
+fi
 
 
 # ---------------------------
-# Install Bitwig
+# Reaper
 # ---------------------------
-notify "Install Bitwig"
-wget -O bitwig.deb https://downloads.bitwig.com/4.3.8/bitwig-studio-4.3.8.deb
-sudo apt install ./bitwig.deb -y
-rm bitwig.deb
-
-
-# ---------------------------
-# Install Reaper
-# ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper668_linux_x86_64.tar.xz
-mkdir ./reaper
-tar -C ./reaper -xf reaper.tar.xz
-sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
-rm -rf ./reaper
-rm reaper.tar.xz
+notify "REAPER"
+read -p "Would you like to install REAPER (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper668_linux_x86_64.tar.xz
+  mkdir ./reaper
+  tar -C ./reaper -xf reaper.tar.xz
+  sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
+  rm -rf ./reaper
+  rm reaper.tar.xz
+fi
 
 
 # ---------------------------
@@ -110,10 +125,9 @@ rm reaper.tar.xz
 # ---------------------------
 notify "Install Wine"
 sudo dpkg --add-architecture i386
-wget -nc https://dl.winehq.org/wine-builds/winehq.key
-sudo mv winehq.key /usr/share/keyrings/winehq-archive.key
-wget -nc https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
-sudo mv winehq-focal.sources /etc/apt/sources.list.d/
+sudo mkdir -pm755 /etc/apt/keyrings
+sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
 sudo apt update
 sudo apt install --install-recommends winehq-staging winetricks -y
 

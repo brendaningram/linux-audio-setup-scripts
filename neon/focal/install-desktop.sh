@@ -32,6 +32,7 @@ notify "Install i915 firmware"
 git clone https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
 sudo cp -r ./linux-firmware/i915 /lib/firmware
 sudo update-initramfs -u -k all
+rm -rf ./linux-firmware
 
 
 # ------------------------------------------------------------------------------------
@@ -70,7 +71,7 @@ sudo apt install kdenlive -y
 # Screen recording and streaming
 # OBS works on Mac, Windows, and Linux
 # It is the universally accepted application for streaming
-sudo add-apt-repository ppa:obsproject/obs-studio
+sudo add-apt-repository ppa:obsproject/obs-studio -y
 sudo apt install obs-studio -y
 
 # Text editing
@@ -78,7 +79,12 @@ sudo apt install obs-studio -y
 sudo apt install kate -y
 
 # Libreoffice
-sudo apt install libreoffice-plasma libreoffice-kde5 libreoffice-style-breeze libreoffice-qt5 -y
+wget -q -O libreoffice.tar.gz "https://mirror.aarnet.edu.au/pub/tdf/libreoffice/stable/7.4.2/deb/x86_64/LibreOffice_7.4.2_Linux_x86-64_deb.tar.gz"
+mkdir ./libreoffice
+tar -C ./libreoffice -xf libreoffice.tar.gz
+sudo apt install ./libreoffice/LibreOffice_7.4.2.3_Linux_x86-64_deb/DEBS/*.deb
+rm -rf ./libreoffice
+rm libreoffice.tar.gz
 
 
 # ------------------------------------------------------------------------------------
@@ -95,7 +101,6 @@ then
 fi
 
 
-
 # ------------------------------------------------------------------------------------
 # VS Code
 # ------------------------------------------------------------------------------------
@@ -109,6 +114,7 @@ then
     sudo apt install ./vscode.deb -y
     rm vscode.deb
 fi
+
 
 # ------------------------------------------------------------------------------------
 # VS Codium
