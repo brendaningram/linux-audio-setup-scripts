@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # ------------------------------------------------------------------------------------
 # This is a bash script for configuring KDE Neon as a usable Windows or Mac replacement.
 # Whereas the audio scripts are designed to be run in their entirety, this script is
@@ -66,7 +67,7 @@ sudo apt install digikam -y
 
 # Video editing
 # Use this instead of: Davinci Resolve, iMovie
-sudo apt install kdenlive -y
+sudo apt install kdenlive mediainfo -y
 
 # Screen recording and streaming
 # OBS works on Mac, Windows, and Linux

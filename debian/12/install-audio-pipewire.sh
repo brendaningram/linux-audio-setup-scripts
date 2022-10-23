@@ -3,7 +3,7 @@
 # This is a bash script for configuring Debian 12 (bookworm) for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/debian/12-bookworm/install-audio-pipewire.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/debian/12/install-audio-pipewire.sh | bash
 
 # Exit if any command fails
 set -e
@@ -14,6 +14,7 @@ notify () {
   echo "--------------------------------------------------------------------"
 }
 
+
 # ---------------------------
 # Update our system
 # ---------------------------
@@ -22,13 +23,12 @@ sudo apt update && sudo apt full-upgrade -y
 
 
 # ---------------------------
-# Liquorix kernel
+# Install Liquorix kernel
 # https://liquorix.net/
 # ---------------------------
-notify "Install the Liquorix kernel"
-sudo apt install curl
+sudo apt install curl -y
 curl 'https://liquorix.net/add-liquorix-repo.sh' | sudo bash
-sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64 -y
+sudo apt install linux-image-liquorix-amd64 linux-headers-liquorix-amd64 -y
 
 
 # ---------------------------
@@ -46,23 +46,11 @@ sudo apt install pipewire pipewire-audio-client-libraries libspa-0.2-jack pipewi
 systemctl --user disable --now pipewire-media-session
 systemctl --user enable --now wireplumber
 
-#sudo apt install qjackctl --no-install-recommends -y
-
 # Tell all apps that use JACK to now use the Pipewire JACK
 sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-*.conf /etc/ld.so.conf.d/
 sudo ldconfig
 
-
-# ---------------------------
-# cpupower
-# This tool allows our CPU to run at maximum performance
-# On a laptop this will drain the battery faster,
-# but will result in much better audio performance.
-# ---------------------------
-#notify "Use performance CPU Governor"
-#sudo apt install linux-cpupower -y
-#sudo systemctl enable cpupower.service
-#sudo sed -i 's/#governor='\''ondemand'\''/governor='\''performance'\''/g' /etc/default/cpupower
+#sudo apt install qjackctl --no-install-recommends -y
 
 
 # ---------------------------
@@ -75,18 +63,18 @@ sudo update-grub
 
 # ---------------------------
 # limits
+# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 # ---------------------------
 notify "Modify limits.d/audio.conf"
-# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 echo '@audio - rtprio 90
 @audio - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
 
 
 # ---------------------------
 # sysctl.conf
+# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 # ---------------------------
 notify "Modify /etc/sysctl.conf"
-# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 echo 'vm.swappiness=10
 fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
 
@@ -99,53 +87,56 @@ sudo usermod -a -G audio $USER
 
 
 # ---------------------------
-# The i386 architecture is required for Bitwig and Wine
+# Bitwig
 # ---------------------------
-notify "Enable i386 architecture"
+notify "Bitwig"
+read -p "Would you like to install Bitwig (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  sudo dpkg --add-architecture i386
+  sudo apt update
+  wget -O bitwig.deb https://downloads.bitwig.com/4.4/bitwig-studio-4.4.deb
+  sudo apt install ./bitwig.deb -y
+  rm bitwig.deb
+fi
+
+
+# ---------------------------
+# REAPER
+# Note: The instructions below will create a PORTABLE REAPER installation
+# at ~/REAPER.
+# ---------------------------
+notify "REAPER"
+read -p "Would you like to install REAPER (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper668_linux_x86_64.tar.xz
+  mkdir ./reaper
+  tar -C ./reaper -xf reaper.tar.xz
+  ./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop
+  rm -rf ./reaper
+  rm reaper.tar.xz
+  touch ~/REAPER/reaper.ini
+fi
+
+
+# ---------------------------
+# Wine (staging)
+# This is required for yabridge
+# See https://wiki.winehq.org/Ubuntu for additional information.
+# ---------------------------
+notify "Install Wine"
 sudo dpkg --add-architecture i386
+sudo mkdir -pm755 /etc/apt/keyrings
+sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
 sudo apt update
-
-
-# ---------------------------
-# Install Bitwig
-# ---------------------------
-notify "Install Bitwig"
-wget -O bitwig.deb https://downloads.bitwig.com/4.4/bitwig-studio-4.4.deb
-sudo apt install ./bitwig.deb -y
-rm bitwig.deb
-
-
-# ---------------------------
-# Install Reaper
-# ---------------------------
-notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper668_linux_x86_64.tar.xz
-mkdir ./reaper
-tar -C ./reaper -xf reaper.tar.xz
-sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
-rm -rf ./reaper
-rm reaper.tar.xz
-
-
-# ---------------------------
-# Wine
-# Detailed instructions can be found at: https://wiki.winehq.org/Debian
-# ---------------------------
-
-mkdir -p ~/.local/share
-
-# Install Wine (yabridge needs this)
-notify "Install Wine Staging"
-sudo dpkg --add-architecture i386
-wget -nc https://dl.winehq.org/wine-builds/winehq.key
-sudo mv winehq.key /usr/share/keyrings/winehq-archive.key
-wget -nc https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
-sudo mv winehq-bookworm.sources /etc/apt/sources.list.d/
-sudo apt update
-sudo apt install --install-recommends winehq-staging
+sudo apt install --install-recommends winehq-staging cabextract -y
 
 # Winetricks
-#sudo apt install winetricks zenity -y
+mkdir -p ~/.local/share
 wget -O winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
 mv winetricks ~/.local/share
 chmod +x ~/.local/share/winetricks
@@ -154,30 +145,32 @@ echo '# Audio: winetricks' >> ~/.bash_aliases
 echo 'export PATH="$PATH:$HOME/.local/share"' >> ~/.bash_aliases
 . ~/.bash_aliases
 
-# NOTE: On first run wine will set up your wineprefix.
-# NOTE: You may see a dialog to install MONO - click "Install".
-sudo apt-get install cabextract -y
+# Base wine packages required for proper plugin functionality
 winetricks corefonts
 
 # Make a copy of .wine, as we will use this in the future as the base of
 # new wine prefixes (when installing plugins)
 cp -r ~/.wine ~/.wine-base
 
+
 # ---------------------------
 # Yabridge
 # Detailed instructions can be found at: https://github.com/robbert-vdh/yabridge/blob/master/README.md
+# ---------------------------
 # NOTE: When you run this script, there may be a newer version of yabridge available.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
-# ---------------------------
 notify "Install yabridge"
-wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.8.1/yabridge-3.8.1.tar.gz
+wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/4.0.2/yabridge-4.0.2.tar.gz
+mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz
-
 echo '' >> ~/.bash_aliases
 echo '# Audio: yabridge path' >> ~/.bash_aliases
 echo 'export PATH="$PATH:$HOME/.local/share/yabridge"' >> ~/.bash_aliases
 . ~/.bash_aliases
+
+# libnotify-bin contains notify-send, which is used for yabridge plugin notifications.
+sudo apt install libnotify-bin -y
 
 # Create common VST paths
 mkdir -p "$HOME/.wine/drive_c/Program Files/Steinberg/VstPlugins"
@@ -213,3 +206,4 @@ yabridgectl add "$HOME/.wine/drive_c/Program Files/Common Files/VST3"
 # Now just reboot, and make music!
 # ---------------------------
 notify "Done - please reboot."
+

@@ -1,9 +1,9 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring KDE Neon (based on Ubuntu 20.04) for pro audio using JACK.
+# This is a bash script for configuring Ubuntu 22.04 (jammy) for pro audio using PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/neon/focal/install-audio-jack.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/ubuntu/2204/install-audio-pipewire.sh | bash
 
 # Exit if any command fails
 set -e
@@ -27,33 +27,25 @@ sudo apt update && sudo apt dist-upgrade -y
 # https://liquorix.net/
 # ---------------------------
 notify "Install the Liquorix kernel"
-sudo add-apt-repository ppa:damentz/liquorix && sudo apt-get update
+sudo add-apt-repository ppa:damentz/liquorix -y && sudo apt-get update
 sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64 -y
 
 
 # ------------------------------------------------------------------------------------
-# Cadence or qjackctl
-# NOTE: I no longer recommend using Cadence. There is nothing wrong with it,
-# however the same results can be achieved with qjackctl while retaining
-# a minimal installation.
-# NOTE: Select "YES" when asked to enable realtime privileges
+# Install the latest Pipewire
+# https://pipewire-debian.github.io/pipewire-debian/
 # ------------------------------------------------------------------------------------
-notify "Cadence or qjackctl"
-read -p "Would you like to use Cadence (Y) for a simple user experience, or qjackctl (N) for a more powerful, and minimal experience (Y/N)? " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-  notify "Installing Cadence"
-  sudo apt-get install apt-transport-https gpgv -y
-  wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_10.0.3_all.deb
-  sudo dpkg -i kxstudio-repos_10.0.3_all.deb
-  rm kxstudio-repos_10.0.3_all.deb
-  sudo apt update
-  sudo apt install cadence -y
-else
-  notify "Installing qjackctl"
-  sudo apt install qjackctl a2jmidid pulseaudio-module-jack pavucontrol -y
-fi
+notify "Install Pipewire"
+sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream -y
+sudo add-apt-repository ppa:pipewire-debian/wireplumber-upstream -y
+sudo apt update
+sudo apt install gstreamer1.0-pipewire libpipewire-0.3-{0,dev,modules} libspa-0.2-{bluetooth,dev,jack,modules} pipewire{,-{audio-client-libraries,pulse,bin,jack,alsa,v4l2,libcamera,locales,tests}} -y
+sudo apt install wireplumber{,-doc} gir1.2-wp-0.4 libwireplumber-0.4-{0,dev} -y
+systemctl --user --now disable pulseaudio.{socket,service}
+systemctl --user mask pulseaudio
+sudo cp -vRa /usr/share/pipewire /etc/
+systemctl --user --now enable pipewire{,-pulse}.{socket,service} filter-chain.service
+systemctl --user --now enable wireplumber.service
 
 
 # ---------------------------
@@ -63,7 +55,7 @@ fi
 # cpufreq.default_governor=performance:
 # ---------------------------
 notify "Modify GRUB options"
-sudo systemctl disable ondemand
+#sudo systemctl disable ondemand
 sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash threadirqs mitigations=off cpufreq.default_governor=performance"/g' /etc/default/grub
 sudo update-grub
 
@@ -78,6 +70,15 @@ fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
 
 
 # ---------------------------
+# audio.conf
+# ---------------------------
+notify "audio.conf"
+# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
+echo '@audio - rtprio 90
+@audio - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
+
+
+# ---------------------------
 # Add the user to the audio group
 # ---------------------------
 notify "Add user to the audio group"
@@ -85,31 +86,39 @@ sudo adduser $USER audio
 
 
 # ---------------------------
-# The i386 architecture is required for Bitwig and Wine
+# Bitwig
 # ---------------------------
-notify "Enable i386 architecture"
-sudo dpkg --add-architecture i386
-sudo apt update
+notify "Bitwig"
+read -p "Would you like to install Bitwig (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  sudo dpkg --add-architecture i386
+  sudo apt update
+  wget -O bitwig.deb https://downloads.bitwig.com/4.4/bitwig-studio-4.4.deb
+  sudo apt install ./bitwig.deb -y
+  rm bitwig.deb
+fi
 
 
 # ---------------------------
-# Install Bitwig
+# REAPER
+# Note: The instructions below will create a PORTABLE REAPER installation
+# at ~/REAPER.
 # ---------------------------
-notify "Install Bitwig"
-wget -O bitwig.deb https://downloads.bitwig.com/4.4/bitwig-studio-4.4.deb
-sudo apt install ./bitwig.deb -y
-rm bitwig.deb
-
-
-# ---------------------------
-# Install Reaper
-# ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper668_linux_x86_64.tar.xz
-mkdir ./reaper
-tar -C ./reaper -xf reaper.tar.xz
-sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
-rm -rf ./reaper
-rm reaper.tar.xz
+notify "REAPER"
+read -p "Would you like to install REAPER (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper668_linux_x86_64.tar.xz
+  mkdir ./reaper
+  tar -C ./reaper -xf reaper.tar.xz
+  ./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop
+  rm -rf ./reaper
+  rm reaper.tar.xz
+  touch ~/REAPER/reaper.ini
+fi
 
 
 # ---------------------------
@@ -119,10 +128,9 @@ rm reaper.tar.xz
 # ---------------------------
 notify "Install Wine"
 sudo dpkg --add-architecture i386
-wget -nc https://dl.winehq.org/wine-builds/winehq.key
-sudo mv winehq.key /usr/share/keyrings/winehq-archive.key
-wget -nc https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
-sudo mv winehq-focal.sources /etc/apt/sources.list.d/
+sudo mkdir -pm755 /etc/apt/keyrings
+sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
 sudo apt update
 sudo apt install --install-recommends winehq-staging winetricks -y
 
@@ -141,7 +149,7 @@ cp -r ~/.wine ~/.wine-base
 # NOTE: When you run this script, there may be a newer version of yabridge available.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
 notify "Install yabridge"
-wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.8.1/yabridge-3.8.1.tar.gz
+wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/4.0.2/yabridge-4.0.2.tar.gz
 mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz
@@ -149,6 +157,9 @@ echo '' >> ~/.bash_aliases
 echo '# Audio: yabridge path' >> ~/.bash_aliases
 echo 'export PATH="$PATH:$HOME/.local/share/yabridge"' >> ~/.bash_aliases
 . ~/.bash_aliases
+
+# libnotify-bin contains notify-send, which is used for yabridge plugin notifications.
+sudo apt install libnotify-bin -y
 
 # Create common VST paths
 mkdir -p "$HOME/.wine/drive_c/Program Files/Steinberg/VstPlugins"

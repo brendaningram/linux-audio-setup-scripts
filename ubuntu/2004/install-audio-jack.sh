@@ -1,9 +1,9 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Zorin OS 16 for pro audio using PIPEWIRE.
+# This is a bash script for configuring Ubuntu 20.04 (focal) for pro audio using JACK.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/zorin/16/install-audio.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/ubuntu/2004/install-audio-jack.sh | bash
 
 # Exit if any command fails
 set -e
@@ -31,21 +31,18 @@ sudo add-apt-repository ppa:damentz/liquorix -y && sudo apt-get update
 sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64 -y
 
 
-# ------------------------------------------------------------------------------------
-# Install the latest Pipewire
-# https://pipewire-debian.github.io/pipewire-debian/
-# ------------------------------------------------------------------------------------
-notify "Install Pipewire"
-sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream -y
-sudo add-apt-repository ppa:pipewire-debian/wireplumber-upstream -y
+# ---------------------------
+# Install kxstudio and cadence
+# Cadence is a tool for managing audio connections to our hardware
+# NOTE: Select "YES" when asked to enable realtime privileges
+# ---------------------------
+notify "Install kxstudio and cadence"
+sudo apt install apt-transport-https gpgv wget -y
+wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_11.1.0_all.deb
+sudo dpkg -i kxstudio-repos_11.1.0_all.deb
+rm kxstudio-repos_11.1.0_all.deb
 sudo apt update
-sudo apt install gstreamer1.0-pipewire libpipewire-0.3-{0,dev,modules} libspa-0.2-{bluetooth,dev,jack,modules} pipewire{,-{audio-client-libraries,pulse,bin,jack,alsa,v4l2,libcamera,locales,tests}} -y
-sudo apt install wireplumber{,-doc} gir1.2-wp-0.4 libwireplumber-0.4-{0,dev} -y
-systemctl --user --now disable pulseaudio.{socket,service}
-systemctl --user mask pulseaudio
-sudo cp -vRa /usr/share/pipewire /etc/
-systemctl --user --now enable pipewire{,-pulse}.{socket,service} filter-chain.service
-systemctl --user --now enable wireplumber.service
+sudo apt install cadence -y
 
 
 # ---------------------------
@@ -67,15 +64,6 @@ notify "sysctl.conf"
 # See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 echo 'vm.swappiness=10
 fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
-
-
-# ---------------------------
-# audio.conf
-# ---------------------------
-notify "audio.conf"
-# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
-echo '@audio - rtprio 90
-@audio - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
 
 
 # ---------------------------

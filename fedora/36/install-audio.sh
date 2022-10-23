@@ -1,6 +1,6 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Fedora for pro audio USING PIPEWIRE.
+# This is a bash script for configuring Fedora 36 for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
 # wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/fedora/36/install-audio.sh | bash
@@ -18,45 +18,28 @@ notify () {
   echo "--------------------------------------------------------------------"
 }
 
-# ------------------------------------------------------------------------------------
-# Install packages
-# ------------------------------------------------------------------------------------
-notify "Update our system"
+
+# ---------------------------
+# Update our system
+# ---------------------------
+notify "Update the system"
 sudo dnf update
-
-# Audio
-notify "Install audio packages"
-# NOTE: Fedora has a good Pipewire setup OOTB.
-# Not much needs to be done here.
-
-#echo "/usr/lib/pipewire-0.3/jack" | sudo tee /etc/ld.so.conf.d/pipewire-jack.conf
-#sudo ldconfig
-
-
-# ---------------------------
-# grub
-# threadirqs = TODO
-# cpufreq.default_governor=performance = TODO
-# ---------------------------
-notify "Modify GRUB options"
-#sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet threadirqs cpufreq.default_governor=performance"/g' /etc/default/grub
-#sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 
 # ---------------------------
 # limits
+# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 # ---------------------------
 notify "Modify limits.d/audio.conf"
-# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 echo '@audio - rtprio 90
 @audio - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
 
 
 # ---------------------------
 # sysctl.conf
+# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 # ---------------------------
 notify "Modify /etc/sysctl.conf"
-# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 echo 'fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
 
 
@@ -67,47 +50,73 @@ notify "Add ourselves to the audio group"
 sudo usermod -a -G audio $USER
 
 
-# ------------------------------------------------------------------------------------
+# ---------------------------
 # Bitwig
-# ------------------------------------------------------------------------------------
-notify "Install Bitwig"
-flatpak install flathub com.bitwig.BitwigStudio
+# TODO: Give option for Flatpak or RPM (DEB->RPM using Alien)
+# ---------------------------
+notify "Bitwig"
+read -p "Would you like to install Bitwig (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  flatpak remote-modify --enable flathub
+  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  flatpak install flathub com.bitwig.BitwigStudio -y
+fi
+
+
+# ---------------------------
+# REAPER
+# Note: The instructions below will create a PORTABLE REAPER installation
+# at ~/REAPER.
+# ---------------------------
+notify "REAPER"
+read -p "Would you like to install REAPER (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper668_linux_x86_64.tar.xz
+  mkdir ./reaper
+  tar -C ./reaper -xf reaper.tar.xz
+  ./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop
+  rm -rf ./reaper
+  rm reaper.tar.xz
+  touch ~/REAPER/reaper.ini
+fi
 
 
 # ------------------------------------------------------------------------------------
-# Reaper
-# ------------------------------------------------------------------------------------
-notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper668_linux_x86_64.tar.xz
-mkdir ./reaper
-tar -C ./reaper -xf reaper.tar.xz
-sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
-rm -rf ./reaper
-rm reaper.tar.xz
-
-
-# ------------------------------------------------------------------------------------
-# Wine (staging)
+# Wine
+# https://copr.fedorainfracloud.org/coprs/patrickl/wine-tkg-testing/
 # ------------------------------------------------------------------------------------
 
-sudo dnf config-manager --add-repo https://dl.winehq.org/wine-builds/fedora/36/winehq.repo
-sudo dnf install winehq-staging -y
+sudo dnf install realtime-setup -y
+sudo systemctl enable realtime-setup.service
+sudo systemctl enable realtime-entsk.service
+sudo usermod -a -G realtime $USER
+sudo dnf copr enable patrickl/wine-tkg-testing -y
+sudo dnf copr enable patrickl/vkd3d-testing -y
+sudo dnf copr enable patrickl/mingw-wine-gecko-testing -y
+sudo dnf copr enable patrickl/wine-dxvk-testing -y
+sudo dnf copr enable patrickl/winetricks-testing -y
+sudo dnf copr enable patrickl/yabridge-stable -y
+sudo dnf install wine --refresh -y
+echo "" >> ~/.bashrc
+echo "# Audio: wine-tkg" >> ~/.bashrc
+echo "export WINEESYNC=1" >> ~/.bashrc
+echo "export WINEFSYNC=1" >> ~/.bashrc
 
-# winetricks
-# TODO: Move it to a more suitable location
-wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
-chmod +x winetricks
-
-# Base wine packages required for proper plugin functionality
-./winetricks corefonts
+# Winetricks
+sudo dnf install winetricks -y
+winetricks corefonts
 
 
 # ------------------------------------------------------------------------------------
 # yabridge
 # ------------------------------------------------------------------------------------
 
-sudo dnf copr enable patrickl/yabridge-stable
-sudo dnf install yabridge
+sudo dnf copr enable patrickl/yabridge-stable -y
+sudo dnf install yabridge -y
 
 # Create common VST paths
 mkdir -p "$HOME/.wine/drive_c/Program Files/Steinberg/VstPlugins"

@@ -1,9 +1,10 @@
 #!/bin/bash
-# ---------------------------
+
+# ------------------------------------------------------------------------------------
 # This is a bash script for configuring Fedora as a usable Windows or Mac replacement.
-# ---------------------------
-# NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/fedora/35/install-desktop.sh | bash
+# Whereas the audio scripts are designed to be run in their entirety, this script is
+# more of a guide - please pick and choose the pieces that are relevant to you.
+# ------------------------------------------------------------------------------------
 
 # Exit if any command fails
 set -e
