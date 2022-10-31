@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ------------------------------------------------------------------------------------
-# This is a bash script for configuring Debian as a usable Windows or Mac replacement.
+# This is a bash script for configuring KDE Neon as a usable Windows or Mac replacement.
 # Whereas the audio scripts are designed to be run in their entirety, this script is
 # more of a guide - please pick and choose the pieces that are relevant to you.
 # ------------------------------------------------------------------------------------
@@ -15,36 +15,14 @@ notify () {
   echo "--------------------------------------------------------------------"
 }
 
-# TODO: 
-# linux linux-firmware intel-ucode
-# latest firefox
-# chrome?
-# vs code
-# makemkv
-# moka icon and gnome-tweaks
-# OBS needs this set in order to be able to access wayland screens
-#echo "export QT_QPA_PLATFORM=wayland" | sudo tee -a /etc/profile
-
 
 # ------------------------------------------------------------------------------------
 # Add ourselves as sudo
 # NOTE: My machine is physically secured, so I specify NOPASSWD for sudo convenience.
+# If you have security concerns, don't do this.
 # ------------------------------------------------------------------------------------
 notify "Add $USER to sudoers.d"
 echo "$USER ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$USER
-
-# ------------------------------------------------------------------------------------
-# Update sources
-# ------------------------------------------------------------------------------------
-notify "Update apt sources"
-echo "deb http://deb.debian.org/debian/ bookworm main contrib non-free
-deb-src http://deb.debian.org/debian/ bookworm main contrib non-free
-
-deb http://security.debian.org/debian-security bookworm-security main contrib non-free
-deb-src http://security.debian.org/debian-security bookworm-security main contrib non-free
-
-deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free
-deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free" | sudo tee /etc/apt/sources.list
 
 
 # ------------------------------------------------------------------------------------
@@ -75,7 +53,7 @@ read -p "Would you like a minimalist system? Note this will remove gnome games, 
 echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-  sudo apt remove gnome-todo gnome-games rhythmbox gnome-weather gnome-maps totem gnome-music gnome-documents shotwell evolution
+  sudo apt remove gnome-games rhythmbox gnome-weather gnome-maps totem gnome-music shotwell evolution -y
 fi
 
 
@@ -83,7 +61,7 @@ notify "Install applications"
 
 # Firmware
 # We add the contrib and non-free repositories above to give us the broadest range of firmware
-sudo apt install firmware-linux -y
+#sudo apt install firmware-linux -y
 
 # Useful utilities
 sudo apt install git vim nfs-common -y
@@ -107,7 +85,7 @@ sudo apt install digikam -y
 
 # Video editing
 # Use this instead of: Davinci Resolve, iMovie
-#sudo apt install kdenlive handbrake -y
+sudo apt install kdenlive mediainfo handbrake -y
 
 # Video playing
 sudo apt install vlc -y
@@ -174,11 +152,26 @@ fi
 
 
 # ------------------------------------------------------------------------------------
+# VS Code
+# ------------------------------------------------------------------------------------
+notify "VS Code"
+read -p "Install VS Code (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    curl -O -L https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+    wget -qO vscode.deb https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+    sudo apt install ./vscode.deb -y
+    rm vscode.deb
+fi
+
+
+# ------------------------------------------------------------------------------------
 # VS Codium
 # ------------------------------------------------------------------------------------
 notify "VSCodium"
 read -p "Install VSCodium (Y/N)? " -n 1 -r
-echo ""
+echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
@@ -207,56 +200,76 @@ fi
 # Gnome config
 # ------------------------------------------------------------------------------------
 
-# How to list schemas
-# gsettings list-schemas | sort
+notify "The following section contains useful Gnome settings. It is not recommended to run this section, rather please review the script file yourself and manually run the sections you need."
+read -p "Run the Gnome settings section (Y/N)? " -n 1 -r
+echo ""
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
 
-# How to list keys within a schema
-# gsettings list-keys <schema>
+  # How to list schemas
+  # gsettings list-schemas | sort
 
-# How to view current key value
-# gsettings get <schema> <key>
+  # How to list keys within a schema
+  # gsettings list-keys <schema>
 
-# How to view the possible values of a key
-# gsettings range <schema> <key>
+  # How to view current key value
+  # gsettings get <schema> <key>
 
-# Show folders before files
-gsettings set org.gtk.Settings.FileChooser sort-directories-first true
+  # How to view the possible values of a key
+  # gsettings range <schema> <key>
 
-# Minimize button
-#gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
+  # Show folders before files
+  gsettings set org.gtk.Settings.FileChooser sort-directories-first true
 
+  # Minimize and Maximize buttons
+  gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
 
-# 12 hour time display
-gsettings set org.gnome.desktop.interface clock-format 12h
+  # 12 hour time display
+  gsettings set org.gnome.desktop.interface clock-format 12h
 
-# Dark theme
-gsettings set org.gnome.desktop.interface gtk-theme Adwaita
-#gsettings set org.gnome.desktop.interface gtk-theme gnome-professional-40.1
+  # Dark theme
+  gsettings set org.gnome.desktop.interface gtk-theme Adwaita
+  #gsettings set org.gnome.desktop.interface gtk-theme gnome-professional-40.1
 
-# Default calendar
-gsettings set org.gnome.desktop.default-applications.office.calendar exec gnome-calendar
+  # Default calendar
+  gsettings set org.gnome.desktop.default-applications.office.calendar exec gnome-calendar
 
-# Don't suspend when plugged in
-gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+  # Don't suspend when plugged in
+  gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
 
-# Mouse
-gsettings set org.gnome.desktop.peripherals.mouse natural-scroll false
+  # Mouse
+  gsettings set org.gnome.desktop.peripherals.mouse natural-scroll false
 
-# Touchpad
-gsettings set org.gnome.desktop.peripherals.touchpad disable-while-typing true
-gsettings set org.gnome.desktop.peripherals.touchpad click-method 'fingers'
-gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click  true
-gsettings set org.gnome.desktop.peripherals.touchpad two-finger-scrolling-enabled true
-gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
+  # Touchpad
+  gsettings set org.gnome.desktop.peripherals.touchpad disable-while-typing true
+  gsettings set org.gnome.desktop.peripherals.touchpad click-method 'fingers'
+  gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click  true
+  gsettings set org.gnome.desktop.peripherals.touchpad two-finger-scrolling-enabled true
+  gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
 
-# Terminal
-gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode 'tab'
-gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ visible-name 'Default'
-gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ login-shell false
-gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ default-size-columns 140
-gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ default-size-rows 40
-gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ scrollbar-policy 'never'
+  # Terminal
+  gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode 'tab'
+  gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ visible-name 'Default'
+  gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ login-shell false
+  gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ default-size-columns 140
+  gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ default-size-rows 40
+  gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ scrollbar-policy 'never'
 
+fi
 
 
 notify "Done!"
+
+
+
+
+
+# TODO: 
+# linux linux-firmware intel-ucode
+# latest firefox
+# chrome?
+# vs code
+# makemkv
+# moka icon and gnome-tweaks
+# OBS needs this set in order to be able to access wayland screens
+#echo "export QT_QPA_PLATFORM=wayland" | sudo tee -a /etc/profile

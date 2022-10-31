@@ -61,10 +61,6 @@ sudo apt install timeshift -y
 # Use this instead of: Photoshop
 sudo apt install krita -y
 
-# Vector editing
-# Use this instead of: Illustrator
-sudo apt install inkscape -y
-
 # Photo management
 # Use this instead of: Lightroom
 sudo apt install digikam -y
