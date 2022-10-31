@@ -68,27 +68,41 @@ notify "Add ourselves to the audio group"
 sudo usermod -a -G audio $USER
 
 
-# ------------------------------------------------------------------------------------
+# ---------------------------
 # Bitwig
-# ------------------------------------------------------------------------------------
-notify "Install Bitwig"
-yay -S bitwig-studio --noconfirm
+# ---------------------------
+notify "Bitwig"
+read -p "Would you like to install Bitwig (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  yay -S bitwig-studio --noconfirm
+fi
 
 
-# ------------------------------------------------------------------------------------
-# Reaper
-# ------------------------------------------------------------------------------------
-notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper669_linux_x86_64.tar.xz
-mkdir ./reaper
-tar -C ./reaper -xf reaper.tar.xz
-sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
-rm -rf ./reaper
-rm reaper.tar.xz
+# ---------------------------
+# REAPER
+# Note: The instructions below will create a PORTABLE REAPER installation
+# at ~/REAPER.
+# ---------------------------
+notify "REAPER"
+read -p "Would you like to install REAPER (Y/N)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper669_linux_x86_64.tar.xz
+  mkdir ./reaper
+  tar -C ./reaper -xf reaper.tar.xz
+  ./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop
+  rm -rf ./reaper
+  rm reaper.tar.xz
+  touch ~/REAPER/reaper.ini
+fi
 
 
 # ------------------------------------------------------------------------------------
 # Wine (staging)
+# https://wiki.winehq.org/Winetricks
 # ------------------------------------------------------------------------------------
 
 # Enable multilib

@@ -124,7 +124,7 @@ fi
 # ---------------------------
 # Wine (staging)
 # This is required for yabridge
-# See https://wiki.winehq.org/Ubuntu for additional information.
+# See https://wiki.winehq.org/Ubuntu and https://wiki.winehq.org/Winetricks for additional information.
 # ---------------------------
 notify "Install Wine"
 sudo dpkg --add-architecture i386
