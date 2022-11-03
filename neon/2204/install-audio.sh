@@ -1,9 +1,9 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Debian 12 (bookworm) for pro audio USING PIPEWIRE.
+# This is a bash script for configuring KDE Neon (based on Ubuntu 22.04) for pro audio using PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/debian/12/install-audio-pipewire.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/neon/2204/install-audio.sh | bash
 
 # Exit if any command fails
 set -e
@@ -19,67 +19,70 @@ notify () {
 # Update our system
 # ---------------------------
 notify "Update the system"
-sudo apt update && sudo apt full-upgrade -y
+#sudo apt update && sudo apt dist-upgrade -y
 
 
 # ---------------------------
-# Install Liquorix kernel
+# Install the Liquorix kernel
 # https://liquorix.net/
 # ---------------------------
-#sudo apt install curl -y
-#curl 'https://liquorix.net/add-liquorix-repo.sh' | sudo bash
-#sudo apt install linux-image-liquorix-amd64 linux-headers-liquorix-amd64 -y
+notify "Install the Liquorix kernel"
+sudo add-apt-repository ppa:damentz/liquorix -y && sudo apt-get update
+sudo apt-get install linux-image-liquorix-amd64 linux-headers-liquorix-amd64 -y
+
+
+# ------------------------------------------------------------------------------------
+# Install the latest Pipewire
+# https://pipewire-debian.github.io/pipewire-debian/
+# ------------------------------------------------------------------------------------
+notify "Install Pipewire"
+sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream -y
+sudo add-apt-repository ppa:pipewire-debian/wireplumber-upstream -y
+sudo apt update
+sudo apt install gstreamer1.0-pipewire libpipewire-0.3-{0,dev,modules} libspa-0.2-{bluetooth,dev,jack,modules} pipewire{,-{audio-client-libraries,pulse,bin,jack,alsa,v4l2,libcamera,locales,tests}} -y
+sudo apt install wireplumber{,-doc} gir1.2-wp-0.4 libwireplumber-0.4-{0,dev} -y
+systemctl --user --now disable pulseaudio.{socket,service}
+systemctl --user mask pulseaudio
+sudo cp -vRa /usr/share/pipewire /etc/
+systemctl --user --now enable pipewire{,-pulse}.{socket,service} filter-chain.service
+systemctl --user --now enable wireplumber.service
 
 
 # ---------------------------
-# Pipewire
-# https://wiki.debian.org/PipeWire
-# NOTE: If you don't have any audio coming from your system, it is possible that the hardware
-# channels in your audio interface are muted. In that case, run alsamixer, press F6 to select
-# your audio interface, locate your main monitor channel, then press M to unmute.
-# You can then run sudo alsactl store to persist these changes.
-# ---------------------------
-notify "Install pipewire"
-sudo apt install pipewire pipewire-audio-client-libraries libspa-0.2-jack pipewire-pulse wireplumber -y
-
-# Tell all apps that use JACK to now use the Pipewire JACK
-sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-*.conf /etc/ld.so.conf.d/
-sudo ldconfig
-
-#sudo apt install qjackctl --no-install-recommends -y
-
-
-# ---------------------------
-# grub
+# Modify GRUB options
+# threadirqs:
+# mitigations=off:
+# cpufreq.default_governor=performance:
 # ---------------------------
 notify "Modify GRUB options"
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet threadirqs cpufreq.default_governor=performance"/g' /etc/default/grub
+#sudo systemctl disable ondemand
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash threadirqs mitigations=off cpufreq.default_governor=performance"/g' /etc/default/grub
 sudo update-grub
 
 
 # ---------------------------
-# limits
-# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
-# ---------------------------
-notify "Modify limits.d/audio.conf"
-echo '@audio - rtprio 90
-@audio - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
-
-
-# ---------------------------
 # sysctl.conf
-# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 # ---------------------------
-notify "Modify /etc/sysctl.conf"
+notify "sysctl.conf"
+# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 echo 'vm.swappiness=10
 fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
 
 
 # ---------------------------
+# audio.conf
+# ---------------------------
+notify "audio.conf"
+# See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
+echo '@audio - rtprio 90
+@audio - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
+
+
+# ---------------------------
 # Add the user to the audio group
 # ---------------------------
-notify "Add ourselves to the audio group"
-sudo usermod -a -G audio $USER
+notify "Add user to the audio group"
+sudo adduser $USER audio
 
 
 # ---------------------------
@@ -121,25 +124,15 @@ fi
 # ---------------------------
 # Wine (staging)
 # This is required for yabridge
-# See https://wiki.winehq.org/Debian for additional information.
+# See https://wiki.winehq.org/Ubuntu and https://wiki.winehq.org/Winetricks for additional information.
 # ---------------------------
 notify "Install Wine"
 sudo dpkg --add-architecture i386
 sudo mkdir -pm755 /etc/apt/keyrings
 sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
 sudo apt update
-sudo apt install --install-recommends winehq-staging cabextract -y
-
-# Winetricks
-mkdir -p ~/.local/share
-wget -O winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
-mv winetricks ~/.local/share
-chmod +x ~/.local/share/winetricks
-echo '' >> ~/.bash_aliases
-echo '# Audio: winetricks' >> ~/.bash_aliases
-echo 'export PATH="$PATH:$HOME/.local/share"' >> ~/.bash_aliases
-. ~/.bash_aliases
+sudo apt install --install-recommends winehq-staging winetricks -y
 
 # Base wine packages required for proper plugin functionality
 winetricks corefonts

@@ -178,4 +178,4 @@ gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profi
 
 notify "Your Arch desktop setup is complete!"
 
-notify "Now install audio by running either install-audio-jack or install-audio-pipewire from this Github repository."
+notify "Now install audio by running either install-audio-jack or install-audio from this Github repository."

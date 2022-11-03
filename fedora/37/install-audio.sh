@@ -1,6 +1,6 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Fedora 36 for pro audio USING PIPEWIRE.
+# This is a bash script for configuring Fedora 37 for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
 # wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/fedora/36/install-audio.sh | bash

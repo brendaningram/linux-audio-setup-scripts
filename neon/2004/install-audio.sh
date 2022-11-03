@@ -3,7 +3,7 @@
 # This is a bash script for configuring KDE Neon (based on Ubuntu 20.04) for pro audio using PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/neon/2004/install-audio-pipewire.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/neon/2004/install-audio.sh | bash
 
 # Exit if any command fails
 set -e

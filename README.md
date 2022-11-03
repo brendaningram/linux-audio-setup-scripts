@@ -6,34 +6,35 @@ This repository contains scripts and guides to get you running with a Linux syst
 
 ## How do I use this?
 
-Find your distribution in the list below, click the link, and run the **SINGLE** command - easy!
+Find your distribution in the list below, click the link, and run the **SINGLE** command listed at the top of the file - easy!
 
 ## Supported distributions:
 
 - **Arch**
   - [JACK](arch/install-audio-jack.sh)
-  - [Pipewire](arch/install-audio-pipewire.sh)
+  - [Pipewire](arch/install-audio.sh)
 - **Debian**
   - [Debian 11 (bullseye) JACK](debian/11/install-audio-jack.sh)
   - [Debian 12 (bookworm) JACK](debian/12/install-audio-jack.sh)
-  - [Debian 12 (bookworm) Pipewire](debian/12/install-audio-pipewire.sh)
+  - [Debian 12 (bookworm) Pipewire](debian/12/install-audio.sh)
 - **Fedora**
   - [Fedora 35 Pipewire](fedora/35/install-audio.sh)
   - [Fedora 36 Pipewire](fedora/36/install-audio.sh)
-  - [Fedora 37 Pipewire (In Progress)](fedora/37/install-audio.sh)
+  - [Fedora 37 Pipewire (In Progress, F37 is still beta)](fedora/37/install-audio.sh)
 - **KDE Neon**
   - [20.04 (based on focal) JACK](neon/2004/install-audio-jack.sh)
-  - [20.04 (based on focal) Pipewire](neon/2004/install-audio-pipewire.sh)
+  - [20.04 (based on focal) Pipewire](neon/2004/install-audio.sh)
+  - [22.04 (based on jammy) Pipewire](neon/2204/install-audio.sh)
 - **Manjaro**
-  - [Pipewire](manjaro/install-audio-pipewire.sh)
+  - [Pipewire](manjaro/install-audio.sh)
 - **Mint**
   - [20 (uma)](mint/20/install-audio.sh)
   - [21 (vanessa)](mint/21/install-audio.sh)
 - **Ubuntu**
   - [20.04 (focal) JACK](ubuntu/2004/install-audio-jack.sh)
   - [22.04 (jammy) JACK](ubuntu/2204/install-audio-jack.sh)
-  - [22.04 (jammy) Pipewire](ubuntu/2204/install-audio-pipewire.sh)
-  - [22.10 (kinetic) Pipewire](ubuntu/2210/install-audio-pipewire.sh)
+  - [22.04 (jammy) Pipewire](ubuntu/2204/install-audio.sh)
+  - [22.10 (kinetic) Pipewire](ubuntu/2210/install-audio.sh)
 - **Zorin OS**
   - [16](zorinos/16/install-audio.sh)
 

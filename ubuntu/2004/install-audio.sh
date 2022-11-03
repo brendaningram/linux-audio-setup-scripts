@@ -1,9 +1,9 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring KDE Neon (based on Ubuntu 22.04) for pro audio using PIPEWIRE.
+# This is a bash script for configuring Ubuntu 20.04 (focal) for pro audio using PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/neon/2204/install-audio-pipewire.sh | bash
+# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/ubuntu/2004/install-audio.sh | bash
 
 # Exit if any command fails
 set -e
@@ -19,7 +19,7 @@ notify () {
 # Update our system
 # ---------------------------
 notify "Update the system"
-#sudo apt update && sudo apt dist-upgrade -y
+sudo apt update && sudo apt dist-upgrade -y
 
 
 # ---------------------------
@@ -55,7 +55,7 @@ systemctl --user --now enable wireplumber.service
 # cpufreq.default_governor=performance:
 # ---------------------------
 notify "Modify GRUB options"
-#sudo systemctl disable ondemand
+sudo systemctl disable ondemand
 sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash threadirqs mitigations=off cpufreq.default_governor=performance"/g' /etc/default/grub
 sudo update-grub
 
@@ -130,7 +130,7 @@ notify "Install Wine"
 sudo dpkg --add-architecture i386
 sudo mkdir -pm755 /etc/apt/keyrings
 sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
 sudo apt update
 sudo apt install --install-recommends winehq-staging winetricks -y
 
@@ -195,4 +195,3 @@ yabridgectl add "$HOME/.wine/drive_c/Program Files/Common Files/VST3"
 # Now just reboot, and make music!
 # ---------------------------
 notify "Done - please reboot."
-
