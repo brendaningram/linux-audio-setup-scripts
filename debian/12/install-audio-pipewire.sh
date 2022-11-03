@@ -92,7 +92,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
   sudo dpkg --add-architecture i386
   sudo apt update
-  wget -O bitwig.deb https://downloads.bitwig.com/4.4/bitwig-studio-4.4.deb
+  wget -O bitwig.deb https://downloads.bitwig.com/4.4.2/bitwig-studio-4.4.2.deb
   sudo apt install ./bitwig.deb -y
   rm bitwig.deb
 fi
@@ -156,7 +156,7 @@ cp -r ~/.wine ~/.wine-base
 # NOTE: When you run this script, there may be a newer version of yabridge available.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
 notify "Install yabridge"
-wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/4.0.2/yabridge-4.0.2.tar.gz
+wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/5.0.0/yabridge-5.0.0.tar.gz
 mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz
