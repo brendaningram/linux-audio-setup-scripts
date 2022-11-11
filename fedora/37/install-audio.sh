@@ -55,14 +55,9 @@ sudo usermod -a -G audio $USER
 # TODO: Give option for Flatpak or RPM (DEB->RPM using Alien)
 # ---------------------------
 notify "Bitwig"
-read -p "Would you like to install Bitwig (Y/N)? " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-  flatpak remote-modify --enable flathub
-  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  flatpak install flathub com.bitwig.BitwigStudio -y
-fi
+flatpak remote-modify --enable flathub
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub com.bitwig.BitwigStudio -y
 
 
 # ---------------------------
@@ -71,18 +66,13 @@ fi
 # at ~/REAPER.
 # ---------------------------
 notify "REAPER"
-read -p "Would you like to install REAPER (Y/N)? " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-  wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper669_linux_x86_64.tar.xz
-  mkdir ./reaper
-  tar -C ./reaper -xf reaper.tar.xz
-  ./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop
-  rm -rf ./reaper
-  rm reaper.tar.xz
-  touch ~/REAPER/reaper.ini
-fi
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper669_linux_x86_64.tar.xz
+mkdir ./reaper
+tar -C ./reaper -xf reaper.tar.xz
+./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop
+rm -rf ./reaper
+rm reaper.tar.xz
+touch ~/REAPER/reaper.ini
 
 
 # ------------------------------------------------------------------------------------
