@@ -69,19 +69,12 @@ sudo usermod -a -G audio $USER
 
 
 # ---------------------------
-# Bitwig
-# ---------------------------
-notify "Bitwig"
-yay -S bitwig-studio --noconfirm
-
-
-# ---------------------------
 # REAPER
 # Note: The instructions below will create a PORTABLE REAPER installation
 # at ~/REAPER.
 # ---------------------------
 notify "REAPER"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper669_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper671_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 ./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop

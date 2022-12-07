@@ -80,28 +80,11 @@ sudo adduser $USER audio
 
 
 # ---------------------------
-# The i386 architecture is required for Bitwig and Wine
-# ---------------------------
-notify "Enable i386 architecture"
-sudo dpkg --add-architecture i386
-sudo apt update
-
-
-# ---------------------------
-# Install Bitwig
-# ---------------------------
-notify "Install Bitwig"
-wget -O bitwig.deb https://downloads.bitwig.com/4.4.2/bitwig-studio-4.4.2.deb
-sudo apt install ./bitwig.deb -y
-rm bitwig.deb
-
-
-# ---------------------------
 # Install Reaper
 # NOTE: As of the date of this commit, the most recent version of Reaper is:
 # 6.36
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper669_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper671_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
@@ -115,6 +98,7 @@ rm reaper.tar.xz
 # ---------------------------
 # Install Wine (yabridge needs this)
 notify "Install Wine"
+sudo dpkg --add-architecture i386
 wget -nc https://dl.winehq.org/wine-builds/winehq.key
 sudo apt-key add winehq.key
 rm winehq.key

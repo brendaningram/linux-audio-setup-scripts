@@ -82,17 +82,6 @@ sudo adduser $USER audio
 
 
 # ---------------------------
-# Bitwig
-# ---------------------------
-notify "Bitwig"
-sudo dpkg --add-architecture i386
-sudo apt update
-wget -O bitwig.deb https://downloads.bitwig.com/4.4.3/bitwig-studio-4.4.3.deb
-sudo apt install ./bitwig.deb -y
-rm bitwig.deb
-
-
-# ---------------------------
 # REAPER
 # Note: The instructions below will create a PORTABLE REAPER installation
 # at ~/REAPER.

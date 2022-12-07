@@ -11,7 +11,7 @@ This guide is a **step by step and end to end guide** that will set up an Arch L
 And will give you applications that allow you to do:
 
 - word processing with Libreoffice
-- professional audio using Bitwig and Reaper (TODO: pipewire? ardour?)
+- professional audio using Reaper (TODO: pipewire? ardour?)
 - photo management using Digikam
 - music playing using TODO
 
