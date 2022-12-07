@@ -3,7 +3,7 @@
 # This is a bash script for configuring Linux Mint 20 (uma) for pro audio.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O - https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/mint/20/install-audio.sh | bash
+# wget -O ~/install-audio.sh https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/mint/20/install-audio.sh && chmod +x ~/install-audio.sh && ~/install-audio.sh
 
 # Exit if any command fails
 set -e
