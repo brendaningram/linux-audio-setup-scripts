@@ -104,13 +104,33 @@ sudo apt-key add winehq.key
 rm winehq.key
 sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' -y
 sudo apt update
-sudo apt install --install-recommends winehq-staging -y
+
+# Wine 7.20 is the latest known version of Wine that works with yabridge
+version=7.20
+variant=staging
+codename=$(shopt -s nullglob; awk '/^deb https:\/\/dl\.winehq\.org/ { print $3; exit 0 } END { exit 1 }' /etc/apt/sources.list /etc/apt/sources.list.d/*.list || awk '/^Suites:/ { print $2; exit }' /etc/apt/sources.list /etc/apt/sources.list.d/wine*.sources)
+suffix=$(dpkg --compare-versions "$version" ge 6.1 && ((dpkg --compare-versions "$version" eq 6.17 && echo "-2") || echo "-1"))
+sudo apt install --install-recommends {"winehq-$variant","wine-$variant","wine-$variant-amd64","wine-$variant-i386"}="$version~$codename$suffix" -y
+
+# Winetricks
+sudo apt install cabextract -y
+mkdir -p ~/.local/share
+wget -O winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+mv winetricks ~/.local/share
+chmod +x ~/.local/share/winetricks
+echo '' >> ~/.bash_aliases
+echo '# Audio: winetricks' >> ~/.bash_aliases
+echo 'export PATH="$PATH:$HOME/.local/share"' >> ~/.bash_aliases
+. ~/.bash_aliases
+
+# Base wine packages required for proper plugin functionality
+winetricks corefonts
 
 # Download and install yabridge
 # NOTE: When you run this script, there may be a newer version.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
 notify "Install yabridge"
-wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/3.8.1/yabridge-3.8.1.tar.gz
+wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/5.0.2/yabridge-5.0.2.tar.gz
 mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz
