@@ -112,6 +112,9 @@ sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-bui
 sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
 sudo apt update
 
+# Ubuntu 22.04 KDE Neon users report problems with the libpoppler-glib8 dependency. The solution is to downgrade this package to the official Ubuntu version.
+sudo apt install libpoppler-glib8:{i386,amd64}=22.02.0-2ubuntu0.1
+
 # Wine 7.20 is the latest known version of Wine that works with yabridge
 version=7.20
 variant=staging
