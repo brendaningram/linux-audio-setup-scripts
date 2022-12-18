@@ -19,7 +19,7 @@ notify () {
 # Update our system
 # ---------------------------
 notify "Update the system"
-#sudo apt update && sudo apt dist-upgrade -y
+sudo apt update && sudo apt dist-upgrade -y
 
 
 # ---------------------------
@@ -112,12 +112,16 @@ sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-bui
 sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
 sudo apt update
 
+# Ubuntu 22.04 KDE Neon users report problems with the libpoppler-glib8 dependency. The solution is to downgrade this package to the official Ubuntu version.
+sudo apt install libpoppler-glib8:{i386,amd64}=22.02.0-2ubuntu0.1 --allow-downgrades -y
+
 # Wine 7.20 is the latest known version of Wine that works with yabridge
 version=7.20
 variant=staging
 codename=$(shopt -s nullglob; awk '/^deb https:\/\/dl\.winehq\.org/ { print $3; exit 0 } END { exit 1 }' /etc/apt/sources.list /etc/apt/sources.list.d/*.list || awk '/^Suites:/ { print $2; exit }' /etc/apt/sources.list /etc/apt/sources.list.d/wine*.sources)
 suffix=$(dpkg --compare-versions "$version" ge 6.1 && ((dpkg --compare-versions "$version" eq 6.17 && echo "-2") || echo "-1"))
-sudo apt install --install-recommends {"winehq-$variant","wine-$variant","wine-$variant-amd64","wine-$variant-i386"}="$version~$codename$suffix" -y
+sudo apt install --install-recommends {"winehq-$variant","wine-$variant","wine-$variant-amd64","wine-$variant-i386"}="$version~$codename$suffix" --allow-downgrades -y
+sudo apt-mark hold winehq-staging
 
 # Winetricks
 sudo apt install cabextract -y
