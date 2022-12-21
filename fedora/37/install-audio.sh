@@ -79,7 +79,6 @@ sudo dnf copr enable patrickl/vkd3d-testing -y
 sudo dnf copr enable patrickl/mingw-wine-gecko-testing -y
 sudo dnf copr enable patrickl/wine-dxvk-testing -y
 sudo dnf copr enable patrickl/winetricks-testing -y
-sudo dnf copr enable patrickl/yabridge-stable -y
 sudo dnf install wine --refresh -y
 echo "" >> ~/.bashrc
 echo "# Audio: wine-tkg" >> ~/.bashrc
