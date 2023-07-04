@@ -136,7 +136,7 @@ cp -r ~/.wine ~/.wine-base
 # NOTE: When you run this script, there may be a newer version of yabridge available.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
 notify "Install yabridge"
-wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/5.0.3/yabridge-5.0.3.tar.gz
+wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/5.0.5/yabridge-5.0.5.tar.gz
 mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz
