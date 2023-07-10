@@ -84,7 +84,7 @@ sudo adduser $USER audio
 # NOTE: As of the date of this commit, the most recent version of Reaper is:
 # 6.36
 # ---------------------------
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper680_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper681_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink

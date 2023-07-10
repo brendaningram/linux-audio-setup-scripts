@@ -1,9 +1,9 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Fedora 36 for pro audio USING PIPEWIRE.
+# This is a bash script for configuring Fedora 38 for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O ~/install-audio.sh https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/fedora/35/install-audio.sh && chmod +x ~/install-audio.sh && ~/install-audio.sh
+# wget -O ~/install-audio.sh https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/fedora/38/install-audio.sh && chmod +x ~/install-audio.sh && ~/install-audio.sh
 
 # Exit if any command fails
 set -e
@@ -79,7 +79,6 @@ sudo dnf copr enable patrickl/vkd3d-testing -y
 sudo dnf copr enable patrickl/mingw-wine-gecko-testing -y
 sudo dnf copr enable patrickl/wine-dxvk-testing -y
 sudo dnf copr enable patrickl/winetricks-testing -y
-sudo dnf copr enable patrickl/yabridge-stable -y
 sudo dnf install wine --refresh -y
 echo "" >> ~/.bashrc
 echo "# Audio: wine-tkg" >> ~/.bashrc
