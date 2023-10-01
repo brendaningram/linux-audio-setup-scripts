@@ -113,9 +113,6 @@ sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/
 sudo apt update
 sudo apt install --install-recommends winehq-staging -y
 
-# Ubuntu 22.04 KDE Neon users report problems with the libpoppler-glib8 dependency. The solution is to downgrade this package to the official Ubuntu version.
-sudo apt install libpoppler-glib8:{i386,amd64}=22.02.0-2ubuntu0.1
-
 # Winetricks
 sudo apt install cabextract -y
 mkdir -p ~/.local/share
