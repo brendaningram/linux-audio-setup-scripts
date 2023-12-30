@@ -76,7 +76,7 @@ sudo usermod -a -G audio $USER
 # Reaper
 # ------------------------------------------------------------------------------------
 notify "Install Reaper"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper683_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/7.x/reaper707_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 sudo ./reaper/reaper_linux_x86_64/install-reaper.sh --install /opt --integrate-desktop --usr-local-bin-symlink
