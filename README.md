@@ -34,32 +34,6 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
 - **Zorin OS**
   - [16](zorinos/16/install-audio.sh)
 
-## You can find me at:
-
-### Personal
-
-- [brendaningram.com](https://brendaningram.com)
-- [Reddit](https://www.reddit.com/user/brendaningram)
-- [Discord](https://discord.com/channels/901735226554851418/901735227565682739)
-
-### Air Audio (audio news and tutorials)
-
-- [Air Audio](https://airaudiohq.com)
-- [Patreon](https://www.patreon.com/airaudiohq)
-- [YouTube](https://www.youtube.com/channel/UCypNYnOtbvtSXEsDWqAEcdA)
-- [Facebook](https://www.facebook.com/airaudiohq)
-- [Instagram](https://www.instagram.com/airaudiohq)
-
-### Feathernator (my music)
-
-- [Feathernator (my music)](https://feathernator.com)
-- [Bandcamp](https://feathernator.bandcamp.com)
-- [Soundcloud](https://soundcloud.com/feathernator)
-- [YouTube](https://www.youtube.com/channel/UCypNYnOtbvtSXEsDWqAEcdA)
-- [Facebook](https://www.facebook.com/feathernator)
-- [Instagram](https://www.instagram.com/feathernator)
-- [Twitter](https://www.twitter.com/feathernator)
-
 ## Notes:
 
 #### SSH clone this repository
