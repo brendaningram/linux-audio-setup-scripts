@@ -91,7 +91,7 @@ sudo adduser $USER audio
 # at ~/REAPER.
 # ---------------------------
 notify "REAPER"
-wget -O reaper.tar.xz http://reaper.fm/files/6.x/reaper683_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/7.x/reaper719_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 ./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop
@@ -139,7 +139,7 @@ cp -r ~/.wine ~/.wine-base
 # NOTE: When you run this script, there may be a newer version of yabridge available.
 # Check https://github.com/robbert-vdh/yabridge/releases and update the version numbers below if necessary
 notify "Install yabridge"
-wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/5.0.5/yabridge-5.0.5.tar.gz
+wget -O yabridge.tar.gz https://github.com/robbert-vdh/yabridge/releases/download/5.1.0/yabridge-5.1.0.tar.gz
 mkdir -p ~/.local/share
 tar -C ~/.local/share -xavf yabridge.tar.gz
 rm yabridge.tar.gz
