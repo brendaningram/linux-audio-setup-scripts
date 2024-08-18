@@ -91,7 +91,7 @@ sudo adduser $USER audio
 # at ~/REAPER.
 # ---------------------------
 notify "REAPER"
-wget -O reaper.tar.xz http://reaper.fm/files/7.x/reaper719_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/7.x/reaper720_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 ./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop
