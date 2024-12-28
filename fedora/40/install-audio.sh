@@ -3,7 +3,7 @@
 # This is a bash script for configuring Fedora 40 for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O ~/install-audio.sh https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/fedora/38/install-audio.sh && chmod +x ~/install-audio.sh && ~/install-audio.sh
+# wget -O ~/install-audio.sh https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/fedora/40/install-audio.sh && chmod +x ~/install-audio.sh && ~/install-audio.sh
 
 # Exit if any command fails
 set -e
@@ -56,7 +56,7 @@ sudo usermod -a -G audio $USER
 # at ~/REAPER.
 # ---------------------------
 notify "REAPER"
-wget -O reaper.tar.xz http://reaper.fm/files/7.x/reaper720_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/7.x/reaper728_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 ./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop

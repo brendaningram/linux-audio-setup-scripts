@@ -1,9 +1,9 @@
 #!/bin/bash
 # ---------------------------
-# This is a bash script for configuring Fedora 37 for pro audio USING PIPEWIRE.
+# This is a bash script for configuring Fedora 41 for pro audio USING PIPEWIRE.
 # ---------------------------
 # NOTE: Execute this script by running the following command on your system:
-# wget -O ~/install-audio.sh https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/fedora/37/install-audio.sh && chmod +x ~/install-audio.sh && ~/install-audio.sh
+# wget -O ~/install-audio.sh https://raw.githubusercontent.com/brendaningram/linux-audio-setup-scripts/main/fedora/41/install-audio.sh && chmod +x ~/install-audio.sh && ~/install-audio.sh
 
 # Exit if any command fails
 set -e
@@ -52,8 +52,9 @@ sudo usermod -a -G audio $USER
 
 # ---------------------------
 # REAPER
-# Note: The instructions below will create a PORTABLE REAPER installation
-# at ~/REAPER.
+# Note: REAPER is not free. It is incredible software - and cheap. 
+# Please do the right thing and purchase it.
+# Note: The instructions below will create a PORTABLE REAPER installation at ~/REAPER.
 # ---------------------------
 notify "REAPER"
 wget -O reaper.tar.xz http://reaper.fm/files/7.x/reaper728_linux_x86_64.tar.xz
@@ -66,38 +67,40 @@ touch ~/REAPER/reaper.ini
 
 
 # ------------------------------------------------------------------------------------
-# Wine
-# https://copr.fedorainfracloud.org/coprs/patrickl/wine-tkg-testing/
+# Wine and yabridge
+# https://copr.fedorainfracloud.org/coprs/patrickl/wine-tkg/
 # ------------------------------------------------------------------------------------
 
 sudo dnf install realtime-setup -y
 sudo systemctl enable realtime-setup.service
 sudo systemctl enable realtime-entsk.service
-sudo usermod -a -G realtime $USER
-sudo dnf copr enable patrickl/wine-tkg-testing -y
-sudo dnf copr enable patrickl/vkd3d-testing -y
-sudo dnf copr enable patrickl/mingw-wine-gecko-testing -y
-sudo dnf copr enable patrickl/wine-dxvk-testing -y
-sudo dnf copr enable patrickl/winetricks-testing -y
-sudo dnf install wine --refresh -y
-echo "" >> ~/.bashrc
-echo "# Audio: wine-tkg" >> ~/.bashrc
+sudo usermod -a -G realtime $(whoami)
+
+sudo systemctl disable rtkit-daemon
+sudo systemctl mask rtkit-daemon
+
+sudo usermod -a -G pipewire $(whoami)
+
+sudo dnf copr enable patrickl/wine-tkg -y
+sudo dnf copr enable patrickl/wine-mono -y
+sudo dnf copr enable patrickl/mingw-wine-gecko -y
+sudo dnf copr enable patrickl/vkd3d -y
+sudo dnf copr enable patrickl/wine-dxvk -y
+sudo dnf copr enable patrickl/winetricks -y
+sudo dnf copr enable patrickl/yabridge -y
+sudo dnf copr enable patrickl/libcurl-gnutls  -y
+
+sudo dnf install wine wine-mono mingw32-wine-gecko mingw64-wine-gecko libvkd3d wine-dxvk* winetricks yabridge libcurl-gnutls -y --refresh
+
+echo "# Audio: wine and yabridge" >> ~/.bashrc
 echo "export WINEESYNC=1" >> ~/.bashrc
 echo "export WINEFSYNC=1" >> ~/.bashrc
 
 # Winetricks
 sudo dnf install winetricks -y
-winetricks corefonts
+winetricks -q corefonts
 
-
-# ------------------------------------------------------------------------------------
-# yabridge
-# ------------------------------------------------------------------------------------
-
-sudo dnf copr enable patrickl/yabridge-stable -y
-sudo dnf install yabridge -y
-
-# Create common VST paths
+# Create common VST paths for yabridge
 mkdir -p "$HOME/.wine/drive_c/Program Files/Steinberg/VstPlugins"
 mkdir -p "$HOME/.wine/drive_c/Program Files/Common Files/VST2"
 mkdir -p "$HOME/.wine/drive_c/Program Files/Common Files/VST3"
