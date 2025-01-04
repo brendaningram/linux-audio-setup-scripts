@@ -8,6 +8,10 @@ This repository contains scripts and guides to get you running with a Linux syst
 
 Find your distribution in the list below, click the link, and run the **SINGLE** command listed at the top of the file - easy!
 
+## Which distribution do you recommend?
+
+As of January 2025, I have used Fedora for the last couple of years and have been extremely happy with the performance and stability of this for my particular audio/music scenarios.
+
 ## Supported distributions:
 
 - **Arch**
@@ -19,6 +23,9 @@ Find your distribution in the list below, click the link, and run the **SINGLE**
   - [Fedora 35 Pipewire](fedora/35/install-audio.sh)
   - [Fedora 36 Pipewire](fedora/36/install-audio.sh)
   - [Fedora 37 Pipewire](fedora/37/install-audio.sh)
+  - [Fedora 38 Pipewire](fedora/38/install-audio.sh)
+  - [Fedora 40 Pipewire](fedora/40/install-audio.sh)
+  - [Fedora 41 Pipewire](fedora/41/install-audio.sh)
 - **KDE Neon**
   - [20.04 (based on focal) Pipewire](neon/2004/install-audio.sh)
   - [22.04 (based on jammy) Pipewire](neon/2204/install-audio.sh)
