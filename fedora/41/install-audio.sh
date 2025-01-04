@@ -8,9 +8,6 @@
 # Exit if any command fails
 set -e
 
-# TODO: Copy jack.conf to ~/.config/pipewire/jack.conf and make appropriate changes
-# mkdir -p ~/.config/pipewire
-# sudo cp /usr/share/pipewire/jack.conf ~/.config/pipewire/jack.conf
 
 notify () {
   echo "--------------------------------------------------------------------"
