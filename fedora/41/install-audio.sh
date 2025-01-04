@@ -27,12 +27,19 @@ sudo dnf update
 
 
 # ---------------------------
+# Use preemptive kernel option
+# ---------------------------
+sudo grubby --args="preempt=full" --update-kernel=ALL
+
+
+# ---------------------------
 # limits
 # See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 # ---------------------------
 notify "Modify limits.d/audio.conf"
-echo '@audio - rtprio 90
-@audio - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
+echo '@pipewire - rtprio 90
+@pipewire - nice -19
+@pipewire - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
 
 
 # ---------------------------
@@ -40,14 +47,15 @@ echo '@audio - rtprio 90
 # See https://wiki.linuxaudio.org/wiki/system_configuration for more information.
 # ---------------------------
 notify "Modify /etc/sysctl.conf"
-echo 'fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
+echo 'vm.swappiness=10
+fs.inotify.max_user_watches=600000' | sudo tee -a /etc/sysctl.conf
 
 
 # ---------------------------
-# Add the user to the audio group
+# Add the user to the pipewire group
 # ---------------------------
-notify "Add ourselves to the audio group"
-sudo usermod -a -G audio $USER
+notify "Add ourselves to the pipewire group"
+sudo usermod -a -G pipewire $USER
 
 
 # ---------------------------
@@ -57,7 +65,7 @@ sudo usermod -a -G audio $USER
 # Note: The instructions below will create a PORTABLE REAPER installation at ~/REAPER.
 # ---------------------------
 notify "REAPER"
-wget -O reaper.tar.xz http://reaper.fm/files/7.x/reaper728_linux_x86_64.tar.xz
+wget -O reaper.tar.xz http://reaper.fm/files/7.x/reaper729_linux_x86_64.tar.xz
 mkdir ./reaper
 tar -C ./reaper -xf reaper.tar.xz
 ./reaper/reaper_linux_x86_64/install-reaper.sh --install ~/ --integrate-desktop
@@ -74,12 +82,10 @@ touch ~/REAPER/reaper.ini
 sudo dnf install realtime-setup -y
 sudo systemctl enable realtime-setup.service
 sudo systemctl enable realtime-entsk.service
-sudo usermod -a -G realtime $(whoami)
+sudo usermod -a -G realtime $USER
 
 sudo systemctl disable rtkit-daemon
 sudo systemctl mask rtkit-daemon
-
-sudo usermod -a -G pipewire $(whoami)
 
 sudo dnf copr enable patrickl/wine-tkg -y
 sudo dnf copr enable patrickl/wine-mono -y
