@@ -4,7 +4,19 @@
 
 This repository contains scripts and guides to get you running with a Linux system capable of professional audio engineering and music production.
 
-## How do I use this?
+## I'm considering moving to Linux - how do I get started?
+
+First, watch this video, where I walk through installing my recommended Linux distribution and setting the system up for audio - config, DAW, plugins - ready to go.
+
+[TODO: Video Link COMING SOON](debian/11/install-audio-jack.sh)
+
+Second, consider which Linux distribution is right for you. If you're new, start with my recommendation above.
+
+Third, follow the instructions in the video, and run the appropriate script for your distribution, below.
+
+Finally, music is art, and art is good for the soul - enjoy!
+
+## How do I use these scripts?
 
 Find your distribution in the list below, click the link, and run the **SINGLE** command listed at the top of the file - easy!
 
