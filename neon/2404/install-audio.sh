@@ -19,17 +19,7 @@ notify () {
 # Update our system
 # ---------------------------
 notify "Update the system"
-sudo apt update && sudo apt dist-upgrade -y
-
-
-# ---------------------------
-# Install the Liquorix kernel
-# https://liquorix.net/
-# ---------------------------
-# TODO: FINALISE TESTING OF THIS SECTION
-#notify "Install the Liquorix kernel"
-#sudo apt install curl -y
-#curl -s 'https://liquorix.net/install-liquorix.sh' | sudo bash
+sudo pkcon refresh && sudo pkcon update
 
 
 # ---------------------------
@@ -65,8 +55,8 @@ sudo update-grub
 # ---------------------------
 # TODO: CONFIRM THIS IS NO LONGER REQUIRED
 #notify "Modify limits.d/audio.conf"
-#echo '@pipewire - rtprio 90
-#@pipewire - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
+echo '@pipewire - rtprio 90
+@pipewire - memlock unlimited' | sudo tee -a /etc/security/limits.d/audio.conf
 
 
 # ---------------------------

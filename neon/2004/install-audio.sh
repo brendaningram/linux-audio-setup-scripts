@@ -19,7 +19,7 @@ notify () {
 # Update our system
 # ---------------------------
 notify "Update the system"
-sudo apt update && sudo apt dist-upgrade -y
+sudo pkcon refresh && sudo pkcon update
 
 
 # ---------------------------
